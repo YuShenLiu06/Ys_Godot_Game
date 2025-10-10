@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckw5fh7ind2n7"]
+
+[ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="1_bsdl0"]
+
+[node name="selection" type="Node2D"]
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Label" type="Label" parent="."]
+offset_left = -191.0
+offset_top = -125.0
+offset_right = 192.83337
+offset_bottom = 120.0
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("1_bsdl0")
+theme_override_font_sizes/font_size = 20
+text = "* 2"
+horizontal_alignment = 1
+vertical_alignment = 1
