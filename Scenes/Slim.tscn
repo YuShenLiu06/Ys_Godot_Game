@@ -115,9 +115,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_nghbv")
 }],
-"loop": true,
+"loop": false,
 "name": &"Injured",
-"speed": 6.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -160,7 +160,6 @@ slime_speed = -50.0
 sprite_frames = SubResource("SpriteFrames_j80c7")
 animation = &"Injured"
 autoplay = "idle"
-frame_progress = 0.8138383
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 9)

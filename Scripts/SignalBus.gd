@@ -1,5 +1,19 @@
 extends Node
 
-@export var Is_choose_time : bool = false
+#专门用来存储信号
 
-signal Get_bullet_damage(damage: int)
+@export var Is_choose_time : bool = false
+@export var tot_Choose_functon : int = 3 #总方法数量
+
+signal Get_bullet_damage(damage: int) #更行弹药伤害信号
+signal Choose_time # 选卡时停信号
+
+
+#下面全部是selection各种实现用信号
+
+signal Close_Choose_time
+
+#sel系列实现
+signal Sel_Bullet_damage(cof : float) #伤害
+signal Sel_Bullet_fire_timer(cof : float) #开火时
+signal Sel_Exp_obtain(cof : float) #经验获取

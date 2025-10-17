@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bupskstlge2ex"]
+[gd_scene load_steps=8 format=3 uid="uid://bupskstlge2ex"]
 
 [ext_resource type="Texture2D" uid="uid://bxoj2wd06ogns" path="res://AssetBundle/Sprites/ForestBackground.png" id="1_iukft"]
 [ext_resource type="Script" uid="uid://cvnvefmmpgl3f" path="res://Scripts/Game_manager.gd" id="1_kldst"]
 [ext_resource type="PackedScene" uid="uid://b2m47vspcos5u" path="res://Scenes/player.tscn" id="2_gl6un"]
-[ext_resource type="PackedScene" uid="uid://dlg4m526u240d" path="res://Scenes/Slim.tscn" id="3_j5yw3"]
 [ext_resource type="PackedScene" uid="uid://ckw5fh7ind2n7" path="res://Scenes/selection.tscn" id="5_7lihs"]
 [ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="5_b2bpf"]
 [ext_resource type="Texture2D" uid="uid://8tkdgaf5pwgr" path="res://AssetBundle/Sprites/Mask.png" id="7_fgofq"]
@@ -11,16 +10,9 @@
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gl6un"]
 distance = -90.0
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Spawn_timer", "Score_label", "Game_over_label", "Exp_label", "Level_label")]
+[node name="Node2D" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_kldst")
-Slime_scene = ExtResource("3_j5yw3")
-Spawn_timer = NodePath("Timer")
-Score_label = NodePath("CanvasLayer/Score_label")
-Game_over_label = NodePath("CanvasLayer/Gameover_label")
-Exp_label = NodePath("CanvasLayer/Exp_label")
-Level_label = NodePath("CanvasLayer/Level_label")
-Choose_scene = ExtResource("5_7lihs")
 
 [node name="Background_1" type="Sprite2D" parent="."]
 texture = ExtResource("1_iukft")
@@ -149,7 +141,7 @@ text = "Game By YS"
 horizontal_alignment = 1
 
 [node name="selection" parent="." instance=ExtResource("5_7lihs")]
-position = Vector2(-488, 306)
+position = Vector2(42, 55)
 
 [node name="selection2" type="Timer" parent="."]
 

@@ -8,22 +8,26 @@ extends CharacterBody2D
 var Is_Game_Over : bool = false
 
 func _ready() -> void: #游戏开始时被运行
-	velocity = Vector2(50,0) #(x,y)
+	
+	#信号链接用
+	SignalBus.Sel_Bullet_fire_timer.connect(Sel_Bullet_fire_timer)
 
+	velocity = Vector2(50,0) #(x,y)
+	
 func _process(delta: float) -> void:
-	if velocity == Vector2.ZERO || Is_Game_Over:
+	if velocity == Vector2.ZERO || Is_Game_Over && !SignalBus.Is_choose_time:
 		$Running_Sound.stop()
 	elif !$Running_Sound.playing:
 		$Running_Sound.play()
-	if Input.is_action_just_pressed("left") && Face_direction==1:
+	if Input.is_action_just_pressed("left") && Face_direction==1: #转向检测
 		turn()
 		Face_direction=-1
-	if Input.is_action_just_pressed("right") && Face_direction==-1:
+	if Input.is_action_just_pressed("right") && Face_direction==-1: #转向检测
 		turn()
 		Face_direction=1
 
 func _physics_process(delta: float) -> void:	#以固定时间运行
-	if !Is_Game_Over: 
+	if !Is_Game_Over&&!SignalBus.Is_choose_time: 
 		velocity=Input.get_vector("left","right","up","down")*move_speed
 		
 		if velocity == Vector2.ZERO:
@@ -34,20 +38,19 @@ func _physics_process(delta: float) -> void:	#以固定时间运行
 		move_and_slide()
 		
 func Gameover():
-	if ! Is_Game_Over:
+	if ! Is_Game_Over && !SignalBus.Is_choose_time :
 		animator.play("Gameover")
 		Is_Game_Over=true
 		get_tree().current_scene.show_game_over()
 		$Gameover_Sound.play()
-		
-		
-		#await get_tree().create_timer(3).timeout #delay 3
 		$Restartimer.start()
+		
+		#await get_tree().create_timer(3).timeout #delay 3$Restartimer.start()
 
 
 func _on_fire() -> void: #根据Timer信号
 	
-	if velocity != Vector2.ZERO || Is_Game_Over:
+	if velocity != Vector2.ZERO || Is_Game_Over || SignalBus.Is_choose_time:
 		return
 	
 	$Fire_Sound.play()
@@ -63,7 +66,11 @@ func _reload_scence() -> void:
 	get_tree().reload_current_scene()
 	
 func turn():
+	#if SignalBus.Choose_time:
+		#return
 	$".".scale.x = -1
-	
-func get_player_derection():
-	return Face_direction
+
+
+#sel用
+func Sel_Bullet_fire_timer(cof):
+	$Timer.wait_time*=cof

@@ -1,21 +1,51 @@
-[gd_scene load_steps=2 format=3 uid="uid://ckw5fh7ind2n7"]
+[gd_scene load_steps=7 format=3 uid="uid://ckw5fh7ind2n7"]
 
+[ext_resource type="Script" uid="uid://c3exbee3g0sxv" path="res://Scripts/selection.gd" id="1_7n71i"]
 [ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="1_bsdl0"]
+[ext_resource type="Texture2D" uid="uid://c510a7sqv2sm2" path="res://AssetBundle/Sprites/Card_Press.png" id="3_0vqlx"]
+[ext_resource type="Texture2D" uid="uid://bjs8xb6uvv0gp" path="res://AssetBundle/Sprites/Card.png" id="3_vjvyd"]
+[ext_resource type="Texture2D" uid="uid://bfrdr5vob2bbw" path="res://AssetBundle/Sprites/Card_Hover.png" id="4_6n3js"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_vjvyd"]
 
 [node name="selection" type="Node2D"]
+script = ExtResource("1_7n71i")
 
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="TextureButton" type="TextureButton" parent="."]
+material = SubResource("CanvasItemMaterial_vjvyd")
+offset_left = -53.0
+offset_top = -74.0
+offset_right = 1720.0
+offset_bottom = 2290.0
+scale = Vector2(0.06, 0.06)
+texture_normal = ExtResource("3_vjvyd")
+texture_pressed = ExtResource("3_0vqlx")
+texture_hover = ExtResource("4_6n3js")
+stretch_mode = 4
+flip_h = true
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="."]
-offset_left = -191.0
-offset_top = -125.0
-offset_right = 192.83337
-offset_bottom = 120.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -33.5
+offset_top = -50.0
+offset_right = 33.5
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/outline_size = 20
 theme_override_fonts/font = ExtResource("1_bsdl0")
 theme_override_font_sizes/font_size = 20
-text = "* 2"
+text = "子弹数量*2"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_button_pressed"]
