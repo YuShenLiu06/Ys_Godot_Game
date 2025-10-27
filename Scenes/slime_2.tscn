@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://xq7d26tq7778"]
-
-[ext_resource type="PackedScene" uid="uid://dlg4m526u240d" path="res://Scenes/Slim.tscn" id="1_ljwhv"]
-
-[node name="Slime_2" instance=ExtResource("1_ljwhv")]

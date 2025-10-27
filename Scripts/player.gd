@@ -15,6 +15,8 @@ func _ready() -> void: #游戏开始时被运行
 	velocity = Vector2(50,0) #(x,y)
 	
 func _process(delta: float) -> void:
+	if SignalBus.Is_choose_time:
+		return
 	if velocity == Vector2.ZERO || Is_Game_Over && !SignalBus.Is_choose_time:
 		$Running_Sound.stop()
 	elif !$Running_Sound.playing:

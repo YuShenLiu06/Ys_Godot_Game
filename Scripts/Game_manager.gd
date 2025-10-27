@@ -47,7 +47,7 @@ func Spawn_slime():
 func Spawn_enemy(enemy_scene : PackedScene,range_1: int,range_2: int) -> void:
 	var enemy_node = enemy_scene.instantiate()
 	enemy_node.position = Vector2(136,randf_range(range_1,range_2))
-	enemy_node.bullet_damage = Bullet_Damage
+	enemy_node.Bullet_damage = Bullet_Damage
 	enemy_node.Exp_coefficient = Exp_coefficient
 	get_tree().current_scene.add_child(enemy_node)
 
