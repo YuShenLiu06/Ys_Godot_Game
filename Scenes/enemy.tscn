@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dlg4m526u240d"]
+[gd_scene load_steps=3 format=3 uid="uid://dlg4m526u240d"]
 
 [ext_resource type="Script" uid="uid://cwml6yv3cwxdc" path="res://Scripts/enemy.gd" id="1_ogr0c"]
+[ext_resource type="PackedScene" uid="uid://bg6o1nvxi7djl" path="res://Scenes/bullet_explosion.tscn" id="2_1f0kj"]
 
 [node name="enemy" type="Area2D"]
 script = ExtResource("1_ogr0c")
+bullet_explosion_scene = ExtResource("2_1f0kj")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

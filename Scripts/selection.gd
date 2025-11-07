@@ -49,10 +49,10 @@ func Bullet_damage_on_press():
 func Exp_obtain_init():
 	#子弹伤害
 	#$Label.text = "经验获取*"+str(cof) 
-	$Label.text = "经验获取*1.5"
+	$Label.text = "经验获取*2"
 
 func Exp_obtain_on_press():
-	var cof : float = 1.5
+	var cof : float = 2.0
 	SignalBus.Sel_Exp_obtain.emit(cof)
 	
 	
