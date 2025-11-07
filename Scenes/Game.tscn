@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bupskstlge2ex"]
+[gd_scene load_steps=10 format=3 uid="uid://bupskstlge2ex"]
 
 [ext_resource type="Texture2D" uid="uid://bxoj2wd06ogns" path="res://AssetBundle/Sprites/ForestBackground.png" id="1_iukft"]
 [ext_resource type="Script" uid="uid://cvnvefmmpgl3f" path="res://Scripts/Game_manager.gd" id="1_kldst"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://ckw5fh7ind2n7" path="res://Scenes/selection.tscn" id="5_7lihs"]
 [ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="5_b2bpf"]
 [ext_resource type="Texture2D" uid="uid://8tkdgaf5pwgr" path="res://AssetBundle/Sprites/Mask.png" id="7_fgofq"]
+[ext_resource type="Script" path="res://Scripts/screen_shake.gd" id="8_screen_shake"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gl6un"]
 distance = -90.0
@@ -34,6 +35,7 @@ metadata/_edit_lock_ = true
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-118, 0)
 zoom = Vector2(2.405, 2.405)
+script = ExtResource("8_screen_shake")
 metadata/_edit_lock_ = true
 
 [node name="Player" parent="." instance=ExtResource("2_gl6un")]

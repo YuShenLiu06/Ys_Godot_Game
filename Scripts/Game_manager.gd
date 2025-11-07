@@ -12,6 +12,7 @@ extends Node2D
 @export var Bullet_Damage : float = 1
 @export var Choose_scene : PackedScene
 @export var Exp_coefficient : float = 1.0  #经验值获取系数
+@export var Camera : Camera2D  # 引用相机节点，用于屏幕抖动效果
 
 #判断用
 
@@ -28,6 +29,11 @@ func _ready() -> void:
 	SignalBus.Sel_Bullet_damage.connect(Callable(self,"Sel_Bullet_damage"))
 	SignalBus.Close_Choose_time.connect(Callable(self,"Close_Choose_time"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_Spawn_slime"))
+	
+	# 确保相机引用正确
+	# 如果在编辑器中没有手动设置相机引用，则自动查找子节点中的Camera2D
+	if Camera == null:
+		Camera = $Camera2D
 
 func _physics_process(delta: float) -> void:
 	Spawn_timer.wait_time -= 0.1 * delta #每秒减少0.2s的史莱姆生成时间
@@ -111,8 +117,18 @@ func Sel_Exp_obtain(cof):
 	Exp_coefficient*=cof
 
 # Sign链接实现
-
 func sign_Is_Spawn_slime(Is_Choose_time):
 	Is_Spawn_slime = !Is_Choose_time
 	# print("debug_Is_Spawn_slime:",Is_Spawn_slime)
+	
+# 屏幕抖动功能
+# 这个函数作为全局接口，供其他脚本调用触发屏幕抖动效果
+# 参数：
+#   strength: 抖动强度，控制抖动的幅度（像素）
+#   duration: 抖动持续时间，控制抖动效果持续多久（秒）
+func screen_shake(strength: float = 5.0, duration: float = 0.3):
+	# 检查相机是否存在且具有start_shake方法（即使用了ScreenShake脚本）
+	if Camera and Camera.has_method("start_shake"):
+		# 调用相机的start_shake方法触发抖动效果
+		Camera.start_shake(strength, duration)
 	

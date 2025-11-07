@@ -1,3 +1,19 @@
 {
-    "godotTools.editorPath.godot4": "g:\\SteamLibrary\\steamapps\\common\\Godot Engine\\godot.windows.opt.tools.64.exe"
+    "godotTools.editorPath.godot4": "g:\\SteamLibrary\\steamapps\\common\\Godot Engine\\godot.windows.opt.tools.64.exe",
+
+    // 禁用 GitHub Copilot 代码补全功能
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+        "yaml": false,
+        "gdscript": true
+    },
+    "github.copilot.inlineSuggest.enable": false,
+    "github.copilot.advanced": {
+        "debug.testOverridingProxyUrl": "",
+        "debug.overrideProxyUrl": "",
+        "debug.quickSuggestCount": 3
+    }
 }

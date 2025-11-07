@@ -2,11 +2,11 @@ extends Area2D
 class_name Enemy_father #enemy 父节点(必须在最上方)
 
 @export var Enemy_speed : float = 50
-@export var Exp : int = 5
+@export var Exp : int = 3
 @export var Health : float = 2.0
 @export var Bullet_damage :	float = 1
 @export var Exp_coefficient : float = 1.0
-@export var explosion_damage : int = 3 #产生爆炸的阈值伤害
+@export var explosion_damage : int = 2 #产生爆炸的阈值伤害
 @export var bullet_explosion_scene : PackedScene
 @export var face_derection : int = -1 #1向右 #-1 向左
 
@@ -51,18 +51,18 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	#如果接触对象是“bullet”scenc
 	if area.is_in_group("Bullet"):
-		# print("[debug][enemy] Bullet hit detected. Bullet damage:", Bullet_damage, " Enemy health before hit:", Health)
 		_on_area_entered_bullet(area)
-
-	if area.is_in_group("explosion"):
+	elif area.is_in_group("explosion"):
 		_on_area_entered_explosion(area)
+	else:
+		return
 	
 	if Health <= 0: #阵亡检测
 		_on_area_entered_death_zone(area)
 		return
 
 	$AnimatedSprite2D.play("Injured") #受击但并未死亡，播放受击动画
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(injured_wait_time).timeout
 	$AnimatedSprite2D.play("idle")
 
 	
@@ -70,9 +70,11 @@ func spawn_bullet_explosion(position: Vector2,scale: float):
 	var bullet_explosion_instance = bullet_explosion_scene.instantiate()
 	bullet_explosion_instance.position = position
 	bullet_explosion_instance.explosion_scale = scale
+	bullet_explosion_instance.Bullet_damage = Bullet_damage
 	get_tree().current_scene.add_child(bullet_explosion_instance)
 
 func _on_area_entered_bullet(area: Area2D):
+	#处理触碰子弹事件
 	area.queue_free() # 删除子弹实体
 	#如果伤害高于爆炸伤害阈值则生成爆炸
 	if Bullet_damage > explosion_damage:
@@ -85,15 +87,21 @@ func set_explosion_scale(cof_base: float,cof_Denominator: int) -> float:  #可�
 	return clamp(cof_base**(1+(Bullet_damage-explosion_damage)/cof_Denominator), 1.0, 10.0)  # 根据伤害调整爆炸范围，限制在5到20之间
 
 func _on_area_entered_explosion(area: Area2D):
-	#处理爆炸伤害 
 	Health -= Bullet_damage
-
 func _on_area_entered_death_zone(area: Area2D) -> void:
 	$AnimatedSprite2D.play("Death")
 	is_dead = true
 	get_tree().current_scene.Score += 1
 	get_tree().current_scene.Exp += ceil(Exp*Exp_coefficient)  #获得经验*经验系数
 	$Death_Sound.play()
+	
+	# 触发屏幕抖动效果
+	# 敌人死亡时触发中等强度的屏幕抖动，增强死亡反馈感
+	# 强度8.0：比默认值稍强，表示敌人死亡是一个重要事件
+	# 持续时间0.4秒：比默认值稍长，让玩家能清楚感受到抖动效果
+	# if get_tree().current_scene.has_method("screen_shake"):
+	# 	get_tree().current_scene.screen_shake(2.0, 0.4)
+	
 	await  get_tree().create_timer(0.6).timeout
 	queue_free()
 
@@ -102,5 +110,6 @@ func set_face_derection():
 		$".".scale.x = -1
 	else:
 		$".".scale.x = 1
+
 
 #sel系列

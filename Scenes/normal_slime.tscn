@@ -210,7 +210,6 @@ radius = 11.0
 
 [node name="Normal_slime" instance=ExtResource("1_vj38g")]
 script = ExtResource("2_2itqx")
-bullet_explosion_scene = null
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_nrb7n")

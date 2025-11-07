@@ -1,0 +1,62 @@
+{
+  "models": [
+    {
+      "title": "GLM-4.6",
+      "provider": "openai-compatible",
+      "model": "glm-4.6",
+      "apiBase": "https://open.bigmodel.cn/api/coding/paas/v4",
+      "apiKey": "dca5fadc04284e0880dc146eee37697d.iu6W6YL95yrwQQ9K",
+      "contextLength": 128000,
+      "temperature": 0.1,
+      "maxTokens": 4096
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "GLM-4.6",
+    "provider": "openai-compatible",
+    "model": "glm-4.6",
+    "apiBase": "https://open.bigmodel.cn/api/coding/paas/v4",
+    "apiKey": "dca5fadc04284e0880dc146eee37697d.iu6W6YL95yrwQQ9K"
+  },
+  "allowAnonymousTelemetry": false,
+  "disableIndexing": false,
+  "experimental": {
+    "modelClass": "claude-3.5-sonnet"
+  },
+  "tabAutocompleteOptions": {
+    "maxPromptTokens": 2000,
+    "debounceDelay": 300,
+    "preventCompletion": false,
+    "useFileText": true,
+    "usePrefix": true,
+    "useSuffix": true,
+    "multilineCompletions": true,
+    "maxMultilineCompletions": 5,
+    "showInlineCompletions": true,
+    "enableContextSnippets": true,
+    "contextSnippetPrefixLength": 200,
+    "contextSnippetSuffixLength": 200,
+    "enableContextualFiltering": true,
+    "enableCodeLenses": true,
+    "enableAutoAccept": false,
+    "enableDebugMode": false
+  },
+  "contextProviders": [
+    "code",
+    "docs",
+    "diff",
+    "terminal",
+    "problems",
+    "folder",
+    "search",
+    "url"
+  ],
+  "customCommands": [],
+  "slashCommands": [
+    "edit",
+    "comment",
+    "share",
+    "cmd",
+    "help"
+  ]
+}
