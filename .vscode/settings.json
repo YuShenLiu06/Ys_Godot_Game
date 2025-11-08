@@ -15,5 +15,22 @@
         "debug.testOverridingProxyUrl": "",
         "debug.overrideProxyUrl": "",
         "debug.quickSuggestCount": 3
-    }
+    },
+    
+    // 文件编码设置，确保正确显示中文
+    "files.encoding": "utf8",
+    "files.autoGuessEncoding": true,
+    
+    // 终端编码设置
+    "terminal.integrated.env.windows": {
+        "PYTHONIOENCODING": "utf-8",
+        "LANG": "zh_CN.UTF-8",
+        "LC_ALL": "zh_CN.UTF-8",
+        "CHCP": "65001"
+    },
+    "terminal.integrated.fontFamily": "Consolas, 'Courier New', 'Microsoft YaHei', monospace",
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.windowsEnableConpty": true,
+    "terminal.integrated.defaultProfile.windows": "PowerShell"
 }
