@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://ckw5fh7ind2n7"]
 
-[ext_resource type="Script" uid="uid://c3exbee3g0sxv" path="res://Scripts/selection.gd" id="1_7n71i"]
+[ext_resource type="Script" uid="uid://c3exbee3g0sxv" path="res://Scripts/selections/selection.gd" id="1_0vqlx"]
 [ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="1_bsdl0"]
 [ext_resource type="Texture2D" uid="uid://c510a7sqv2sm2" path="res://AssetBundle/Sprites/Card_Press.png" id="3_0vqlx"]
 [ext_resource type="Texture2D" uid="uid://bjs8xb6uvv0gp" path="res://AssetBundle/Sprites/Card.png" id="3_vjvyd"]
@@ -9,7 +9,7 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_vjvyd"]
 
 [node name="selection" type="Node2D"]
-script = ExtResource("1_7n71i")
+script = ExtResource("1_0vqlx")
 
 [node name="TextureButton" type="TextureButton" parent="."]
 material = SubResource("CanvasItemMaterial_vjvyd")

@@ -36,8 +36,8 @@ func _ready() -> void:
 		Camera = $Camera2D
 
 func _physics_process(delta: float) -> void:
-	Spawn_timer.wait_time -= 0.1 * delta #每秒减少0.2s的史莱姆生成时间
-	Spawn_timer.wait_time = clamp(Spawn_timer.wait_time,1,3) #将Spawn_timer.wait_time大小限制在1与3之间
+	Spawn_timer.wait_time -= 0.05 * delta #每秒减少0.05s的史莱姆生成时间
+	Spawn_timer.wait_time = clamp(Spawn_timer.wait_time,0.2,3) #将Spawn_timer.wait_time大小限制在1与3之间
 	
 	#文本更新
 	Score_label.text = "Score: " + str(Score)

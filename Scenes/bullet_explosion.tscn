@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://bg6o1nvxi7djl"]
 
-[ext_resource type="Script" uid="uid://csxqa5rm5j3cx" path="res://Scripts/bullet_explosion.gd" id="1_2qh3v"]
+[ext_resource type="Script" uid="uid://csxqa5rm5j3cx" path="res://Scripts/bullet/bullet_explosion.gd" id="1_2qh3v"]
 [ext_resource type="Texture2D" uid="uid://dewaat5nq8snb" path="res://AssetBundle/Sprites/Bullet.png" id="2_vv80n"]
 [ext_resource type="Texture2D" uid="uid://dbidv7hhm74yh" path="res://AssetBundle/Assets/Props Items and VFX/fireball-hit/Sprites/fireball-hit-1.png" id="3_2qh3v"]
 [ext_resource type="Texture2D" uid="uid://6ajt4ii1ln8a" path="res://AssetBundle/Assets/Props Items and VFX/fireball-hit/Sprites/fireball-hit-2.png" id="4_ry686"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dfie6qphrwkvf"]
 
-[ext_resource type="Script" uid="uid://1kp2ugn6y5yk" path="res://Scripts/bullet.gd" id="1_oduel"]
+[ext_resource type="Script" uid="uid://1kp2ugn6y5yk" path="res://Scripts/bullet/bullet.gd" id="1_oduel"]
 [ext_resource type="Texture2D" uid="uid://dewaat5nq8snb" path="res://AssetBundle/Sprites/Bullet.png" id="1_xjght"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_oduel"]
@@ -8,7 +8,6 @@ size = Vector2(6, 3)
 
 [node name="Bullet" type="Area2D" groups=["Bullet"]]
 script = ExtResource("1_oduel")
-bullet_speed = 300.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_xjght")

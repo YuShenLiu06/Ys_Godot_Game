@@ -1,6 +1,6 @@
 [gd_scene load_steps=25 format=3 uid="uid://b2m47vspcos5u"]
 
-[ext_resource type="Script" uid="uid://cwvbb6jagcp33" path="res://Scripts/player.gd" id="1_cvnsp"]
+[ext_resource type="Script" uid="uid://cwvbb6jagcp33" path="res://Scripts/manager/player.gd" id="1_fkybt"]
 [ext_resource type="Texture2D" uid="uid://dbvv1tb1n0wd0" path="res://AssetBundle/Sprites/Foxy.png" id="1_v0iea"]
 [ext_resource type="PackedScene" uid="uid://dfie6qphrwkvf" path="res://Scenes/bullet.tscn" id="2_6t5aa"]
 [ext_resource type="AudioStream" uid="uid://snc00pl6iomr" path="res://AssetBundle/Audio/Gun.mp3" id="4_vgqql"]
@@ -141,8 +141,7 @@ animations = [{
 radius = 12.0415945
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("animator")]
-script = ExtResource("1_cvnsp")
-move_speed = 100.0
+script = ExtResource("1_fkybt")
 animator = NodePath("AnimatedSprite2D")
 bullet_scene = ExtResource("2_6t5aa")
 

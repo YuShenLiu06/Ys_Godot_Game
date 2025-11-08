@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var move_speed : float = 50
+@export var move_speed : float = 70
 @export var animator : AnimatedSprite2D
 @export var Face_direction : int = 1 #1向右 #-1 向左
 @export var bullet_scene : PackedScene
@@ -45,7 +45,7 @@ func _physics_process(delta: float) -> void:	#以固定时间运行
 		else:
 			animator.play("run")
 		
-		move_and_slide()
+		move_and_slide()#move_and_slide 已经自动处理了delta无需再次手动处理
 		
 func Gameover():
 	if ! Is_Game_Over :

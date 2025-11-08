@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var bullet_speed : float = 100
+@export var bullet_speed : float = 300
 @export var face_derection : int = 1
 @export var Damage : float = 1
 

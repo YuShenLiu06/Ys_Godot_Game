@@ -1,7 +1,7 @@
 [gd_scene load_steps=34 format=3 uid="uid://deiu5ksacr04m"]
 
 [ext_resource type="PackedScene" uid="uid://dlg4m526u240d" path="res://Scenes/enemy.tscn" id="1_vj38g"]
-[ext_resource type="Script" uid="uid://d4a7vwdsl1sl6" path="res://Scripts/normal_slime.gd" id="2_2itqx"]
+[ext_resource type="Script" uid="uid://d4a7vwdsl1sl6" path="res://Scripts/enemy/normal_slime.gd" id="2_2itqx"]
 [ext_resource type="Texture2D" uid="uid://c42pb14n5xaec" path="res://AssetBundle/Sprites/SlimerDeath.png" id="2_l8yc2"]
 [ext_resource type="Texture2D" uid="uid://dnps1dkclpofa" path="res://AssetBundle/Assets/Characters/Enemies and NPC/Slimer/Spritesheets/slimer.png" id="3_2itqx"]
 [ext_resource type="Texture2D" uid="uid://dwwv2mflbfjqn" path="res://AssetBundle/Sprites/Slimer.png" id="3_ifklq"]

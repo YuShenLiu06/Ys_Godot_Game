@@ -84,7 +84,7 @@ func _on_area_entered_bullet(area: Area2D):
 
 #通过伤害设置爆炸范围
 func set_explosion_scale(cof_base: float,cof_Denominator: int) -> float:  #可以调整底数和分母系数用来调整爆炸的增炸速度
-	return clamp(cof_base**(1+(Bullet_damage-explosion_damage)/cof_Denominator), 1.0, 10.0)  # 根据伤害调整爆炸范围，限制在5到20之间
+	return clamp(cof_base**(1+(Bullet_damage-explosion_damage)/cof_Denominator), 1.0, 5.0)  # 根据伤害调整爆炸范围，限制在5到20之间
 
 func _on_area_entered_explosion(area: Area2D):
 	Health -= Bullet_damage
@@ -94,13 +94,6 @@ func _on_area_entered_death_zone(area: Area2D) -> void:
 	get_tree().current_scene.Score += 1
 	get_tree().current_scene.Exp += ceil(Exp*Exp_coefficient)  #获得经验*经验系数
 	$Death_Sound.play()
-	
-	# 触发屏幕抖动效果
-	# 敌人死亡时触发中等强度的屏幕抖动，增强死亡反馈感
-	# 强度8.0：比默认值稍强，表示敌人死亡是一个重要事件
-	# 持续时间0.4秒：比默认值稍长，让玩家能清楚感受到抖动效果
-	# if get_tree().current_scene.has_method("screen_shake"):
-	# 	get_tree().current_scene.screen_shake(2.0, 0.4)
 	
 	await  get_tree().create_timer(0.6).timeout
 	queue_free()
