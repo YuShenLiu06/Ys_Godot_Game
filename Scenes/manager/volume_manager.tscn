@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://f08lyanoh6nh"]
+
+[ext_resource type="Script" uid="uid://3c26prmq057l" path="res://Scripts/manager/volume_manager.gd" id="1_focku"]
+[ext_resource type="AudioStream" uid="uid://d1l8dwa4w18nq" path="res://AssetBundle/Audio/sfx/select_001.ogg" id="2_osq0y"]
+[ext_resource type="AudioStream" uid="uid://chmbwatnd427s" path="res://AssetBundle/Audio/sfx/click_002.ogg" id="3_q8f55"]
+[ext_resource type="PackedScene" uid="uid://cibxf3kvbry3f" path="res://Scenes/manager/bgm.tscn" id="4_q8f55"]
+
+[node name="volume_manager" type="Node"]
+script = ExtResource("1_focku")
+
+[node name="sfx" type="Node" parent="."]
+
+[node name="ui_focus" type="AudioStreamPlayer" parent="sfx"]
+stream = ExtResource("2_osq0y")
+bus = &"sfx"
+
+[node name="ui_press" type="AudioStreamPlayer" parent="sfx"]
+stream = ExtResource("3_q8f55")
+bus = &"sfx"
+
+[node name="bgm" type="Node" parent="."]
+
+[node name="BGM" parent="bgm" instance=ExtResource("4_q8f55")]
+process_mode = 3
+bus = &"bgm"

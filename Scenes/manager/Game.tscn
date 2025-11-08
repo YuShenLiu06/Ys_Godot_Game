@@ -1,45 +1,46 @@
-[gd_scene load_steps=10 format=3 uid="uid://bupskstlge2ex"]
+[gd_scene load_steps=11 format=3 uid="uid://bupskstlge2ex"]
 
-[ext_resource type="Texture2D" uid="uid://bxoj2wd06ogns" path="res://AssetBundle/Sprites/ForestBackground.png" id="1_iukft"]
-[ext_resource type="Script" uid="uid://cvnvefmmpgl3f" path="res://Scripts/manager/Game_manager.gd" id="1_kldst"]
-[ext_resource type="PackedScene" uid="uid://deiu5ksacr04m" path="res://Scenes/normal_slime.tscn" id="2_fgofq"]
-[ext_resource type="PackedScene" uid="uid://b2m47vspcos5u" path="res://Scenes/player.tscn" id="2_gl6un"]
-[ext_resource type="PackedScene" uid="uid://ckw5fh7ind2n7" path="res://Scenes/selection.tscn" id="5_7lihs"]
-[ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="5_b2bpf"]
-[ext_resource type="Script" uid="uid://byu5gvx28lukj" path="res://Scripts/tools/screen_shake.gd" id="7_2irst"]
-[ext_resource type="Texture2D" uid="uid://8tkdgaf5pwgr" path="res://AssetBundle/Sprites/Mask.png" id="7_fgofq"]
+[ext_resource type="Script" uid="uid://cvnvefmmpgl3f" path="res://Scripts/manager/Game_manager.gd" id="1_nynpg"]
+[ext_resource type="PackedScene" uid="uid://deiu5ksacr04m" path="res://Scenes/enemy/normal_slime.tscn" id="2_323vv"]
+[ext_resource type="PackedScene" uid="uid://ckw5fh7ind2n7" path="res://Scenes/slections/selection.tscn" id="3_pkjtk"]
+[ext_resource type="Texture2D" uid="uid://bxoj2wd06ogns" path="res://AssetBundle/Sprites/ForestBackground.png" id="4_dewy0"]
+[ext_resource type="Script" uid="uid://byu5gvx28lukj" path="res://Scripts/tools/screen_shake.gd" id="5_p2xgi"]
+[ext_resource type="PackedScene" uid="uid://b2m47vspcos5u" path="res://Scenes/manager/player.tscn" id="6_v4dpg"]
+[ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="7_ce0uy"]
+[ext_resource type="Texture2D" uid="uid://8tkdgaf5pwgr" path="res://AssetBundle/Sprites/Mask.png" id="8_yqas3"]
+[ext_resource type="PackedScene" uid="uid://dvn17wgwo56kl" path="res://Scenes/UI/pause_ui.tscn" id="9_pause_ui"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gl6un"]
 distance = -90.0
 
 [node name="Node2D" type="Node2D" node_paths=PackedStringArray("Spawn_timer", "Score_label", "Game_over_label", "Exp_label", "Level_label", "Camera")]
 y_sort_enabled = true
-script = ExtResource("1_kldst")
-Slime_scene = ExtResource("2_fgofq")
+script = ExtResource("1_nynpg")
+Slime_scene = ExtResource("2_323vv")
 Spawn_timer = NodePath("Timer")
 Score_label = NodePath("CanvasLayer/Score_label")
 Game_over_label = NodePath("CanvasLayer/Gameover_label")
 Exp_label = NodePath("CanvasLayer/Exp_label")
 Level_label = NodePath("CanvasLayer/Level_label")
-Choose_scene = ExtResource("5_7lihs")
+Choose_scene = ExtResource("3_pkjtk")
 Camera = NodePath("Camera2D")
 
 [node name="Background_1" type="Sprite2D" parent="."]
-texture = ExtResource("1_iukft")
+texture = ExtResource("4_dewy0")
 metadata/_edit_lock_ = true
 
 [node name="Background_2" type="Sprite2D" parent="."]
 position = Vector2(-240, 0)
-texture = ExtResource("1_iukft")
+texture = ExtResource("4_dewy0")
 metadata/_edit_lock_ = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-118, 0)
 zoom = Vector2(2.405, 2.405)
-script = ExtResource("7_2irst")
+script = ExtResource("5_p2xgi")
 metadata/_edit_lock_ = true
 
-[node name="Player" parent="." instance=ExtResource("2_gl6un")]
+[node name="Player" parent="." instance=ExtResource("6_v4dpg")]
 position = Vector2(-156, 54)
 
 [node name="Boundary" type="Node2D" parent="."]
@@ -87,7 +88,7 @@ offset_left = 22.0
 offset_top = 18.0
 offset_right = 207.0
 offset_bottom = 67.0
-theme_override_fonts/font = ExtResource("5_b2bpf")
+theme_override_fonts/font = ExtResource("7_ce0uy")
 theme_override_font_sizes/font_size = 48
 text = "Score: 0w"
 
@@ -97,7 +98,7 @@ offset_top = 67.0
 offset_right = 205.0
 offset_bottom = 116.0
 size_flags_horizontal = 4
-theme_override_fonts/font = ExtResource("5_b2bpf")
+theme_override_fonts/font = ExtResource("7_ce0uy")
 theme_override_font_sizes/font_size = 24
 text = "Score: 0w"
 vertical_alignment = 1
@@ -107,7 +108,7 @@ offset_left = 21.0
 offset_top = 108.0
 offset_right = 206.0
 offset_bottom = 157.0
-theme_override_fonts/font = ExtResource("5_b2bpf")
+theme_override_fonts/font = ExtResource("7_ce0uy")
 theme_override_font_sizes/font_size = 24
 text = "Score: 0w"
 vertical_alignment = 1
@@ -127,7 +128,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.44026223, 0.5728327, 0.34608257, 1)
 theme_override_constants/outline_size = 60
-theme_override_fonts/font = ExtResource("5_b2bpf")
+theme_override_fonts/font = ExtResource("7_ce0uy")
 theme_override_font_sizes/font_size = 120
 text = "GAME OVER"
 
@@ -146,12 +147,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.44026223, 0.5728327, 0.34608257, 1)
 theme_override_constants/outline_size = 30
-theme_override_fonts/font = ExtResource("5_b2bpf")
+theme_override_fonts/font = ExtResource("7_ce0uy")
 theme_override_font_sizes/font_size = 60
 text = "Game By YS"
 horizontal_alignment = 1
 
-[node name="selection" parent="." instance=ExtResource("5_7lihs")]
+[node name="pause_ui" parent="CanvasLayer" instance=ExtResource("9_pause_ui")]
+process_mode = 2
+position = Vector2(307, 172)
+
+[node name="selection" parent="." instance=ExtResource("3_pkjtk")]
 position = Vector2(-488, 306)
 script = null
 
@@ -161,6 +166,6 @@ script = null
 modulate = Color(1, 1, 1, 0.44705883)
 position = Vector2(-121, 21)
 scale = Vector2(0.39930555, 0.39930555)
-texture = ExtResource("7_fgofq")
+texture = ExtResource("8_yqas3")
 
 [connection signal="timeout" from="Timer" to="." method="Spawn_slime"]

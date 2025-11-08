@@ -1,0 +1,87 @@
+[gd_scene load_steps=7 format=3 uid="uid://dvn17wgwo56kl"]
+
+[ext_resource type="Texture2D" uid="uid://8tkdgaf5pwgr" path="res://AssetBundle/Sprites/Mask.png" id="1_mx7s6"]
+[ext_resource type="Script" uid="uid://b4b64dcajuumr" path="res://Scripts/ui_control/pause_ui.gd" id="1_pr555"]
+[ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="3_175hy"]
+[ext_resource type="PackedScene" uid="uid://bqokcoviy8eqd" path="res://Scenes/UI/exit_ui.tscn" id="5_8dpcc"]
+[ext_resource type="PackedScene" uid="uid://bqiimj1cal7dj" path="res://Scenes/UI/volume_slider.tscn" id="6_pr555"]
+[ext_resource type="PackedScene" uid="uid://5h8hvcflo3wi" path="res://Scenes/UI/continue_ui.tscn" id="6_qjk66"]
+
+[node name="pause_ui" type="Node2D"]
+position = Vector2(309, 173)
+script = ExtResource("1_pr555")
+
+[node name="Mask" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.44705883)
+z_index = -1
+position = Vector2(269.77783, 151.75)
+scale = Vector2(0.7505787, 0.7505787)
+texture = ExtResource("1_mx7s6")
+
+[node name="游戏暂停" type="Label" parent="."]
+offset_left = 145.0
+offset_top = -97.0
+offset_right = 337.0
+offset_bottom = -48.0
+theme_override_fonts/font = ExtResource("3_175hy")
+theme_override_font_sizes/font_size = 48
+text = "游戏暂停"
+metadata/_edit_use_anchors_ = true
+
+[node name="exit" parent="." instance=ExtResource("5_8dpcc")]
+offset_left = 251.0
+offset_top = -47.0
+offset_right = 331.0
+offset_bottom = -2.0
+metadata/_edit_use_anchors_ = true
+
+[node name="continue" parent="." instance=ExtResource("6_qjk66")]
+offset_left = 147.0
+offset_top = -47.0
+offset_right = 227.0
+offset_bottom = -2.0
+metadata/_edit_use_anchors_ = true
+
+[node name="sub_volume_slider" parent="." instance=ExtResource("6_pr555")]
+offset_left = 163.0
+offset_top = 46.0
+offset_right = 353.0
+offset_bottom = 62.0
+
+[node name="总音量设置" type="Label" parent="sub_volume_slider"]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 80.0
+theme_override_fonts/font = ExtResource("3_175hy")
+theme_override_font_sizes/font_size = 16
+text = "总音量设置"
+
+[node name="sub_volume_slider2" parent="." instance=ExtResource("6_pr555")]
+offset_left = 163.0
+offset_top = 92.0
+offset_right = 353.0
+offset_bottom = 108.0
+bus = &"sfx"
+
+[node name="总音量设置" type="Label" parent="sub_volume_slider2"]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 80.0
+theme_override_fonts/font = ExtResource("3_175hy")
+theme_override_font_sizes/font_size = 16
+text = "音效音量设置"
+
+[node name="sub_volume_slider3" parent="." instance=ExtResource("6_pr555")]
+offset_left = 163.0
+offset_top = 137.0
+offset_right = 353.0
+offset_bottom = 153.0
+bus = &"bgm"
+
+[node name="总音量设置" type="Label" parent="sub_volume_slider3"]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 80.0
+theme_override_fonts/font = ExtResource("3_175hy")
+theme_override_font_sizes/font_size = 16
+text = "BGM音量设置"

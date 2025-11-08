@@ -22,13 +22,13 @@ var Is_Spawn_slime : bool = true
 func _ready() -> void:
 	$Mask.visible = false
 	Set_damage(1)
-	
 	#用于初始化信号链接
 	#sel专用连接区
 	SignalBus.Sel_Exp_obtain.connect(Callable(self,"Sel_Exp_obtain"))
 	SignalBus.Sel_Bullet_damage.connect(Callable(self,"Sel_Bullet_damage"))
 	SignalBus.Close_Choose_time.connect(Callable(self,"Close_Choose_time"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_Spawn_slime"))
+	SignalBus.Pause_game.connect(Callable(self,"on_pause_game"))
 	
 	# 确保相机引用正确
 	# 如果在编辑器中没有手动设置相机引用，则自动查找子节点中的Camera2D
@@ -36,8 +36,12 @@ func _ready() -> void:
 		Camera = $Camera2D
 
 func _physics_process(delta: float) -> void:
+	# 游戏暂停时不处理游戏逻辑
+	if Input.is_action_just_pressed("pause"):
+		toggle_pause()
+		
 	if Is_Spawn_slime:
-		Spawn_timer.wait_time -= 0.05 * delta #每秒减少0.05s的史莱姆生成时间
+		Spawn_timer.wait_time -= 0.03 * delta #每秒减少0.05s的史莱姆生成时间
 		Spawn_timer.wait_time = clamp(Spawn_timer.wait_time,0.2,3) #将Spawn_timer.wait_time大小限制在1与3之间
 	
 	#文本更新
@@ -53,12 +57,14 @@ func _physics_process(delta: float) -> void:
 		Start_choose_time()
 
 func Spawn_slime():
-	if Is_Spawn_slime:
+	# print("[debug][gm] Spawn_slime:",Is_Spawn_slime)
+	if !Is_Spawn_slime:
+		return
 		#两边都有1/2的概率出兵
-		if randi()%2==0:
-			Spawn_enemy(Slime_scene,-345,32,112,1,1.1)		
-		else:
-			Spawn_enemy(Slime_scene,136,32,112,-1,1.1)		
+	if randi()%2==0:
+		Spawn_enemy(Slime_scene,-345,32,112,1,1.1)		
+	else:
+		Spawn_enemy(Slime_scene,136,32,112,-1,1.1)		
 
 func Spawn_enemy(enemy_scene : PackedScene,position_x,range_1: int,range_2: int,enemy_face_derection: int,enemy_health_cof_base : float) -> void:
 	var enemy_node = enemy_scene.instantiate()
@@ -108,6 +114,11 @@ func comput_enemy_health(enemy_init_health: float,cof_base: float): #血量成�
 	# print("[debug][player] player bullet damage is:",Bullet_Damage)
 	return enemy_init_health**(cof_base**Level)
 
+func toggle_pause(): #暂停切换
+	# 切换暂停状态
+	SignalBus.Is_paused = !SignalBus.Is_paused
+	SignalBus.Pause_game.emit(SignalBus.Is_paused)
+	get_tree().paused = SignalBus.Is_paused
 
 # sel相关函数实现
 
@@ -121,12 +132,11 @@ func Sel_Exp_obtain(cof):
 func sign_Is_Spawn_slime(Is_Choose_time):
 	Is_Spawn_slime = !Is_Choose_time
 	# print("debug_Is_Spawn_slime:",Is_Spawn_slime)
-	
-# 屏幕抖动功能
-# 这个函数作为全局接口，供其他脚本调用触发屏幕抖动效果
-# 参数：
-#   strength: 抖动强度，控制抖动的幅度（像素）
-#   duration: 抖动持续时间，控制抖动效果持续多久（秒）
+
+func on_pause_game(is_paused: bool):
+	# 暂停时不修改Is_Spawn_slime状态，只处理暂停逻辑
+	pass
+
 func screen_shake(strength: float = 5.0, duration: float = 0.3):
 	# 检查相机是否存在且具有start_shake方法（即使用了ScreenShake脚本）
 	if Camera and Camera.has_method("start_shake"):

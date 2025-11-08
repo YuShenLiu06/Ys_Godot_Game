@@ -16,15 +16,20 @@ var injured_wait_time : float = 0.25  # 受击动画持续时间
 
 var is_dead : bool = false
 
+# 暂停免疫的计时器变量
+var game_time_elapsed : float = 0.0  # 累计游戏时间（不包括暂停时间）
+var lifetime : float = 15.0  # 敌人存活时间（秒）
+var injured_time_elapsed : float = 0.0  # 受伤动画已播放时间
+var death_time_elapsed : float = 0.0  # 死亡动画已播放时间
+var is_injured : bool = false  # 是否正在播放受伤动画
+
 func _ready() -> void:
 	set_face_derection()
 	_init()
 
 	#信号连接专用：显式将方法绑定到当前实例，避免签名/解析问题
 	SignalBus.Choose_time.connect(Callable(self, "Clear_itself"))
-	
-	await get_tree().create_timer(15).timeout
-	queue_free()
+	SignalBus.Pause_game.connect(Callable(self, "on_pause_game"))
 
 # func _init() -> void:
 
@@ -33,8 +38,33 @@ func Clear_itself(_is_choose_time: bool=false) -> void:
 	queue_free()
 
 func _physics_process(delta: float) -> void:
+	# 只在非暂停状态下累计时间
+	if not SignalBus.Is_paused:
+		game_time_elapsed += delta
+		
+		# 检查自动销毁计时器
+		if !is_dead and game_time_elapsed >= lifetime:
+			queue_free()
+			return
+		
+		if is_dead:
+			# 检查死亡动画计时器
+			death_time_elapsed += delta
+			if death_time_elapsed >= 0.6:
+				queue_free()
+			return
+		
+		# 检查受伤动画计时器
+		if is_injured:
+			injured_time_elapsed += delta
+			if injured_time_elapsed >= injured_wait_time:
+				$AnimatedSprite2D.play("idle")
+				is_injured = false
+				injured_time_elapsed = 0.0
+	
 	if is_dead:
 		return
+		
 	position += Vector2(Enemy_speed*face_derection,0) * delta #delta意味着每个帧花费了多少秒 这句话意味着在1s移动100个像素点
 
 func _on_body_entered(body: Node2D) -> void:
@@ -62,8 +92,9 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 
 	$AnimatedSprite2D.play("Injured") #受击但并未死亡，播放受击动画
-	await get_tree().create_timer(injured_wait_time).timeout
-	$AnimatedSprite2D.play("idle")
+	# 使用自定义计时器替代await，不受暂停影响
+	is_injured = true
+	injured_time_elapsed = 0.0
 
 	
 func spawn_bullet_explosion(position: Vector2,scale: float):
@@ -95,8 +126,8 @@ func _on_area_entered_death_zone(area: Area2D) -> void:
 	get_tree().current_scene.Exp += ceil(Exp*Exp_coefficient)  #获得经验*经验系数
 	$Death_Sound.play()
 	
-	await  get_tree().create_timer(0.6).timeout
-	queue_free()
+	# 使用自定义计时器替代await，不受暂停影响
+	death_time_elapsed = 0.0
 
 func set_face_derection():
 	if face_derection == 1:
@@ -104,5 +135,10 @@ func set_face_derection():
 	else:
 		$".".scale.x = 1
 
+
+# 暂停信号处理函数
+func on_pause_game(is_paused: bool) -> void:
+	# 暂停状态下不处理任何逻辑，时间不会累计
+	pass
 
 #sel系列

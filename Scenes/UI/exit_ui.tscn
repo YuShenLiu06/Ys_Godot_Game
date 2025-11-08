@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqokcoviy8eqd"]
+
+[ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="1_ut8sn"]
+[ext_resource type="Script" uid="uid://cyup4ndawt3xh" path="res://Scripts/ui_control/exit_ui.gd" id="2_ofsyv"]
+
+[node name="exit" type="Button"]
+offset_right = 80.0
+offset_bottom = 45.0
+theme_override_fonts/font = ExtResource("1_ut8sn")
+theme_override_font_sizes/font_size = 24
+action_mode = 0
+text = "退出"
+script = ExtResource("2_ofsyv")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

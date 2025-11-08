@@ -9,6 +9,9 @@ var metohd_on_press = [null,Bullet_Halve_on_press,Bullet_damage_on_press,Exp_obt
 func _ready() -> void: #初始化
 	method_init[Choose_functon].call()
 	
+	# 设置UI音效
+	VolumeManager.setup_ui_sounds(self)
+	
 	#信号链接
 	SignalBus.Close_Choose_time.connect(clear)
 

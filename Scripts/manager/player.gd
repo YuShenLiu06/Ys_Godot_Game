@@ -19,10 +19,14 @@ func _ready() -> void: #游戏开始时被运行
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_processing"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_physics_process"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_on_fire"))
+	SignalBus.Pause_game.connect(Callable(self,"sign_Is_processing"))
 
 	velocity = Vector2(50,0) #(x,y)
 	
 func _process(delta: float) -> void:
+	# 检测ESC键暂停游戏
+
+	
 	if !Is_processing:
 		return
 	if velocity == Vector2.ZERO || Is_Game_Over && !SignalBus.Is_choose_time:
@@ -96,3 +100,5 @@ func sign_physics_process(Is_Choose_time):
 func sign_Is_on_fire(Is_Choose_time):
 	Is_on_fire = !Is_Choose_time
 	# print("debug_Is_on_fire:",Is_on_fire)
+
+

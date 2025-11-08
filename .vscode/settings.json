@@ -3,7 +3,7 @@
 
     // 禁用 GitHub Copilot 代码补全功能
     "github.copilot.enable": {
-        "*": false,
+        "*": true,
         "plaintext": false,
         "markdown": false,
         "scminput": false,

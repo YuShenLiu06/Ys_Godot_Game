@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cwvbb6jagcp33" path="res://Scripts/manager/player.gd" id="1_fkybt"]
 [ext_resource type="Texture2D" uid="uid://dbvv1tb1n0wd0" path="res://AssetBundle/Sprites/Foxy.png" id="1_v0iea"]
-[ext_resource type="PackedScene" uid="uid://dfie6qphrwkvf" path="res://Scenes/bullet.tscn" id="2_6t5aa"]
+[ext_resource type="PackedScene" uid="uid://dfie6qphrwkvf" path="res://Scenes/bullet/bullet.tscn" id="2_6t5aa"]
 [ext_resource type="AudioStream" uid="uid://snc00pl6iomr" path="res://AssetBundle/Audio/Gun.mp3" id="4_vgqql"]
 [ext_resource type="AudioStream" uid="uid://p7wrdw44ehgp" path="res://AssetBundle/Audio/GameOver.mp3" id="5_fkybt"]
 [ext_resource type="AudioStream" uid="uid://dwfh4vtw8m3wr" path="res://AssetBundle/Audio/Running.mp3" id="6_x3wgy"]

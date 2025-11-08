@@ -4,9 +4,11 @@ extends Node
 
 @export var Is_choose_time : bool = false #使用信号而不是全局变量
 @export var tot_Choose_functon : int = 3 #总方法数量
+@export var Is_paused : bool = false #游戏暂停状态
 
 signal Get_bullet_damage(damage: int) #更行弹药伤害信号
 signal Choose_time(Is_Choose_time: bool) # 选卡时停信号
+signal Pause_game(is_paused: bool) # 游戏暂停信号
 
 
 #下面全部是selection各种实现用信号
