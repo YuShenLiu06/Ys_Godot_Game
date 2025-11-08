@@ -12,7 +12,7 @@ func _ready() -> void:
 	#根据Bullet_damage计算震动强度
 	# var Vibration_intensityzheng : float = Bullet_damage
 	if get_tree().current_scene.has_method("screen_shake"):
-		get_tree().current_scene.screen_shake(2.0, 0.4)
+		get_tree().current_scene.screen_shake(1.0, 0.4)
 	#等待0.42后删除自己(12fps下5帧)
 	clear_itself(0.42)
 	# _deug()

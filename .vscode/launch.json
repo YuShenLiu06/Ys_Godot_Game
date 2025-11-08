@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Godot",
+            "type": "godot",
+            "request": "launch",
+            "project": "${workspaceFolder}",
+            "debug": false,
+            "env": {
+                "PYTHONIOENCODING": "utf-8",
+                "LANG": "zh_CN.UTF-8"
+            }
+        }
+    ]
+}
