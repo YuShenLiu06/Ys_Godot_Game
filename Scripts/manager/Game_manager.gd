@@ -30,6 +30,10 @@ func _ready() -> void:
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_Spawn_slime"))
 	SignalBus.Pause_game.connect(Callable(self,"on_pause_game"))
 	
+	# 连接键盘管理器的信号
+	KeyboardManager.pause_requested.connect(_on_pause_requested)
+	KeyboardManager.resume_requested.connect(_on_resume_requested)
+	
 	# 确保相机引用正确
 	# 如果在编辑器中没有手动设置相机引用，则自动查找子节点中的Camera2D
 	if Camera == null:
@@ -37,8 +41,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	# 游戏暂停时不处理游戏逻辑
-	if Input.is_action_just_pressed("pause"):
-		toggle_pause()
+	# 移除直接的ESC键检测，改为使用KeyboardManager的信号系统
 		
 	if Is_Spawn_slime:
 		Spawn_timer.wait_time -= 0.03 * delta #每秒减少0.05s的史莱姆生成时间
@@ -119,6 +122,18 @@ func toggle_pause(): #暂停切换
 	SignalBus.Is_paused = !SignalBus.Is_paused
 	SignalBus.Pause_game.emit(SignalBus.Is_paused)
 	get_tree().paused = SignalBus.Is_paused
+
+# 处理键盘管理器的暂停请求
+func _on_pause_requested():
+	if not SignalBus.Is_paused:
+		toggle_pause()
+		KeyboardManager.set_context(KeyboardManager.InputContext.UI_PAUSE)
+
+# 处理键盘管理器的恢复请求
+func _on_resume_requested():
+	if SignalBus.Is_paused:
+		toggle_pause()
+		KeyboardManager.set_context(KeyboardManager.InputContext.GAMEPLAY)
 
 # sel相关函数实现
 

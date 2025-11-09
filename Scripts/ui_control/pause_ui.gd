@@ -15,15 +15,29 @@ func _ready() -> void:
 	
 	# 连接暂停信号
 	SignalBus.Pause_game.connect(_on_pause_game)
+	
+	# 连接键盘管理器的信号
+	KeyboardManager.resume_requested.connect(_on_resume_requested)
 
 func _on_pause_game(is_paused: bool) -> void:
 	visible = is_paused
 	if is_paused:
 		# 暂停游戏时显示UI
 		show_pause_ui()
+		# 设置键盘管理器上下文为暂停界面
+		KeyboardManager.set_context(KeyboardManager.InputContext.UI_PAUSE)
 	else:
 		# 继续游戏时隐藏UI
 		hide_pause_ui()
+		# 恢复键盘管理器上下文为游戏进行中
+		KeyboardManager.set_context(KeyboardManager.InputContext.GAMEPLAY)
+
+# 处理键盘管理器的恢复请求
+func _on_resume_requested():
+	if visible:
+		SignalBus.Is_paused = false
+		SignalBus.Pause_game.emit(false)
+		get_tree().paused = false
 
 func show_pause_ui() -> void:
 	visible = true
@@ -46,3 +60,4 @@ func hide_pause_ui() -> void:
 # func _on_exit_pressed() -> void:
 # 	# 退出游戏
 # 	get_tree().quit()
+

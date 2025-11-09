@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 SignalBus="*res://Scripts/manager/SignalBus.gd"
 VolumeManager="*res://Scenes/manager/volume_manager.tscn"
+KeyboardManager="*res://Scripts/manager/keyboard_manager.gd"
 
 [display]
 

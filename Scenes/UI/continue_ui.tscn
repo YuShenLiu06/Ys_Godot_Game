@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://5h8hvcflo3wi"]
+[gd_scene load_steps=5 format=3 uid="uid://5h8hvcflo3wi"]
 
 [ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="1_6yfae"]
 [ext_resource type="Script" uid="uid://tj5di4v35dbn" path="res://Scripts/ui_control/continue_ui.gd" id="2_wpbti"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_wpbti"]
+device = -1
+keycode = 4194305
+
+[sub_resource type="Shortcut" id="Shortcut_u8ks6"]
+events = [SubResource("InputEventKey_wpbti")]
 
 [node name="continue" type="Button"]
 offset_right = 80.0
@@ -9,6 +16,7 @@ offset_bottom = 45.0
 theme_override_fonts/font = ExtResource("1_6yfae")
 theme_override_font_sizes/font_size = 24
 action_mode = 0
+shortcut = SubResource("Shortcut_u8ks6")
 text = "继续"
 script = ExtResource("2_wpbti")
 
