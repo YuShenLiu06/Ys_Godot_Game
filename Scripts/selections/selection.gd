@@ -1,61 +1,92 @@
+# 牌包选择主程序 - 负责牌包的创建、管理和UI交互
+# 遵循单一职责原则，只负责牌包的UI交互和生命周期管理
 extends Node2D
 
-@export var Choose_functon : int = 1 #当前卡牌选项
+# 当前牌包实例
+var current_card: BaseCard
 
-var method_init = [null,Bullet_Halve_init,Bullet_damage_init,Exp_obtain_init] #初始化函数组
-var metohd_on_press = [null,Bullet_Halve_on_press,Bullet_damage_on_press,Exp_obtain_on_press]
+# UI节点引用
+@export var label: Label
+@export var texture_button: TextureButton
 
 
-func _ready() -> void: #初始化
-	method_init[Choose_functon].call()
+func _ready() -> void:
+	# 获取UI节点引用
+	texture_button = $TextureButton
+	label = $Label
 	
 	# 设置UI音效
 	VolumeManager.setup_ui_sounds(self)
 	
-	#信号链接
+	# 信号链接
 	SignalBus.Close_Choose_time.connect(clear)
 
-func _on_button_pressed() -> void: #按钮被按下的时候
-	metohd_on_press[Choose_functon].call()
-	SignalBus.Close_Choose_time.emit()
+# 初始化牌包
+func initialize_card(card: BaseCard) -> void:
+	current_card = card
+	
+	# 初始化牌包
+	if current_card:
+		current_card.initialize()
+		
+		# 更新UI显示
+		update_ui_display()
 
-func _process(delta: float) -> void:
-	pass
+# 更新UI显示
+func update_ui_display() -> void:
+	if current_card and label:
+		label.text = current_card.get_display_text()
 
+# 按钮被按下时调用
+func _on_button_pressed() -> void:
+	if current_card and current_card.can_apply():
+		# 应用牌包效果
+		current_card.apply_effect()
+		
+		# 发送关闭选择界面信号
+		SignalBus.Close_Choose_time.emit()
+
+# 清理牌包
 func clear():
 	queue_free()
 
-#卡牌功能实现
+# 设置牌包位置（用于布局）
+func set_card_position(pos: Vector2) -> void:
+	position = pos
 
-#选项1
-func Bullet_Halve_init():
-	
-	#$Label.text = "开火时间*"+str(cof)
-	$Label.text = "开火时间*0.75"
+# 便捷方法：通过牌包类型初始化（已弃用，使用标签系统替代）
+func initialize_by_type(card_type) -> void:
+	push_warning("initialize_by_type 已弃用，请使用基于标签的方法")
+	# 回退到随机初始化
+	initialize_random()
 
-func Bullet_Halve_on_press():
-	var cof : float = 0.75
-	SignalBus.Sel_Bullet_fire_timer.emit(cof)
-	
-#选项2
-func Bullet_damage_init():
-	#子弹伤害
-	#$Label.text = "子弹伤害*"+str(cof)
-	$Label.text = "子弹伤害*1.5"
+# 便捷方法：通过标签初始化
+func initialize_by_tag(tag: String) -> void:
+	var card = CardFactory.create_card_by_tag(tag)
+	initialize_card(card)
 
-func Bullet_damage_on_press():
-	var cof : float = 1.5
-	SignalBus.Sel_Bullet_damage.emit(cof)
+# 便捷方法：随机初始化
+func initialize_random() -> void:
+	var card = CardFactory.create_random_enabled_card()
+	if card:
+		initialize_card(card)
+	else:
+		# 如果没有启用的牌包，则创建任意牌包
+		card = CardFactory.create_random_card()
+		if card:
+			initialize_card(card)
+		else:
+			push_error("无法创建任何牌包")
 
-#选项3
 
-func Exp_obtain_init():
-	#子弹伤害
-	#$Label.text = "经验获取*"+str(cof) 
-	$Label.text = "经验获取*2"
-
-func Exp_obtain_on_press():
-	var cof : float = 2.0
-	SignalBus.Sel_Exp_obtain.emit(cof)
-	
-	
+func initialize_random_by_enable_tag() -> void:
+	var card = CardFactory.create_random_card_by_enable_tag()
+	if card:
+		initialize_card(card)
+	else:
+		# 如果没有启用的牌包，则创建任意牌包
+		card = CardFactory.create_random_card()
+		if card:
+			initialize_card(card)
+		else:
+			push_error("无法创建任何牌包")

@@ -44,7 +44,7 @@ func _physics_process(delta: float) -> void:
 	# 移除直接的ESC键检测，改为使用KeyboardManager的信号系统
 		
 	if Is_Spawn_slime:
-		Spawn_timer.wait_time -= 0.03 * delta #每秒减少0.05s的史莱姆生成时间
+		Spawn_timer.wait_time -= 0.03 * delta #每秒减少0.03s的史莱姆生成时间
 		Spawn_timer.wait_time = clamp(Spawn_timer.wait_time,0.2,3) #将Spawn_timer.wait_time大小限制在1与3之间
 	
 	#文本更新
@@ -92,20 +92,30 @@ func Start_choose_time(): #选项界面创建
 	#全局信号
 	SignalBus.Choose_time.emit(true)
 	
-	#生成三张卡片
-	Spawn_Card(Choose_scene,-276,55,randi_range(1,SignalBus.tot_Choose_functon))
-	Spawn_Card(Choose_scene,-117,55,randi_range(1,SignalBus.tot_Choose_functon))
-	Spawn_Card(Choose_scene,42,55,randi_range(1,SignalBus.tot_Choose_functon))
+	#生成三张卡片 - 使用新的牌包架构
+	Spawn_Card_New(Choose_scene, Vector2(-276, 55))
+	Spawn_Card_New(Choose_scene, Vector2(-117, 55))
+	Spawn_Card_New(Choose_scene, Vector2(42, 55))
 	
 func Close_Choose_time(): #选项界面关闭
 	$Mask.visible = false
 	SignalBus.Choose_time.emit(false)
 	# SignalBus.Is_choose_time = false
 
-func Spawn_Card(Card_scene : PackedScene,Positon_x : int,Positon_y,Select_fuc : int): #对于Card创建
+func Spawn_Card(Card_scene : PackedScene,Positon_x : int,Positon_y,Select_fuc : int): #对于Card创建（保留旧方法以兼容）
 	var Card_node = Card_scene.instantiate()
 	Card_node.Choose_functon = Select_fuc
 	Card_node.position = Vector2(Positon_x,Positon_y)
+	get_tree().current_scene.add_child(Card_node)
+
+# 新的牌包创建方法 - 使用新的牌包架构
+func Spawn_Card_New(Card_scene : PackedScene, position: Vector2): #对于Card创建
+	var Card_node = Card_scene.instantiate()
+	Card_node.position = position
+	
+	# 使用新的随机初始化方法
+	Card_node.initialize_random_by_enable_tag()
+	
 	get_tree().current_scene.add_child(Card_node)
 
 func Set_damage(Set_damage: float): #子弹伤害设置函数

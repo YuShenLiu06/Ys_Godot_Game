@@ -1,8 +1,9 @@
-[gd_scene load_steps=25 format=3 uid="uid://b2m47vspcos5u"]
+[gd_scene load_steps=26 format=3 uid="uid://b2m47vspcos5u"]
 
 [ext_resource type="Script" uid="uid://cwvbb6jagcp33" path="res://Scripts/manager/player.gd" id="1_fkybt"]
 [ext_resource type="Texture2D" uid="uid://dbvv1tb1n0wd0" path="res://AssetBundle/Sprites/Foxy.png" id="1_v0iea"]
 [ext_resource type="PackedScene" uid="uid://dfie6qphrwkvf" path="res://Scenes/bullet/bullet.tscn" id="2_6t5aa"]
+[ext_resource type="PackedScene" path="res://Scenes/bullet/tracking_bullet.tscn" id="3_tracking"]
 [ext_resource type="AudioStream" uid="uid://snc00pl6iomr" path="res://AssetBundle/Audio/Gun.mp3" id="4_vgqql"]
 [ext_resource type="AudioStream" uid="uid://p7wrdw44ehgp" path="res://AssetBundle/Audio/GameOver.mp3" id="5_fkybt"]
 [ext_resource type="AudioStream" uid="uid://dwfh4vtw8m3wr" path="res://AssetBundle/Audio/Running.mp3" id="6_x3wgy"]
@@ -140,10 +141,12 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_cvnsp"]
 radius = 12.0415945
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("animator")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("animator") groups=["player"]]
 script = ExtResource("1_fkybt")
 animator = NodePath("AnimatedSprite2D")
 bullet_scene = ExtResource("2_6t5aa")
+tracking_bullet_scene = ExtResource("3_tracking")
+bullet_model = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -7)

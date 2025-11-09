@@ -4,6 +4,14 @@ extends CharacterBody2D
 @export var animator : AnimatedSprite2D
 @export var Face_direction : int = 1 #1向右 #-1 向左
 @export var bullet_scene : PackedScene
+@export var tracking_bullet_scene : PackedScene
+@export var bullet_model : int = 0 #默认0为
+
+# tracking_bullet增强属性
+var tracking_bullet_turn_speed_multiplier: float = 1.0  # 转向速度倍数
+var tracking_bullet_max_lifetime_bonus: float = 0.0  # 最大生存时间加成
+
+enum bullet_models {normal_bullet,tracking_bullet}
 
 #sign 判断用
 
@@ -16,6 +24,8 @@ func _ready() -> void: #游戏开始时被运行
 	
 	#信号链接用
 	SignalBus.Sel_Bullet_fire_timer.connect(Sel_Bullet_fire_timer)
+	SignalBus.Sel_Tracking_Bullet_Turn_Speed.connect(Sel_Tracking_Bullet_Turn_Speed)
+	SignalBus.Sel_Tracking_Bullet_Max_Lifetime.connect(Sel_Tracking_Bullet_Max_Lifetime)
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_processing"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_physics_process"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_on_fire"))
@@ -68,9 +78,28 @@ func _on_fire() -> void: #根据Timer信号
 		return
 	
 	$Fire_Sound.play()
-	var bullet_node = bullet_scene.instantiate()
+	
+	# 根据设置选择子弹类型
+	var bullet_node
+	match bullet_model:
+		bullet_models.tracking_bullet:
+			if tracking_bullet_scene:
+				bullet_node = tracking_bullet_scene.instantiate()
+				# 设置追踪子弹的玩家引用
+				bullet_node.node_player = self
+				# 应用增强属性
+				bullet_node.turn_speed *= tracking_bullet_turn_speed_multiplier
+				bullet_node.max_lifetime += tracking_bullet_max_lifetime_bonus
+			else:
+				# 如果追踪子弹场景未设置，回退到普通子弹
+				bullet_node = bullet_scene.instantiate()
+				bullet_node.face_derection = Face_direction
+		bullet_models.normal_bullet:
+			# 默认使用普通子弹
+			bullet_node = bullet_scene.instantiate()
+			bullet_node.face_derection = Face_direction
+	
 	bullet_node.position = position
-	bullet_node.face_derection = Face_direction
 	get_tree().current_scene.add_child(bullet_node)
 	
 	
@@ -101,4 +130,11 @@ func sign_Is_on_fire(Is_Choose_time):
 	Is_on_fire = !Is_Choose_time
 	# print("debug_Is_on_fire:",Is_on_fire)
 
+# tracking_bullet增强信号处理
+func Sel_Tracking_Bullet_Turn_Speed(cof: float):
+	tracking_bullet_turn_speed_multiplier *= cof
+	print("追踪子弹转向速度倍数更新为: ", tracking_bullet_turn_speed_multiplier)
 
+func Sel_Tracking_Bullet_Max_Lifetime(increase: float):
+	tracking_bullet_max_lifetime_bonus += increase
+	print("追踪子弹最大生存时间加成更新为: ", tracking_bullet_max_lifetime_bonus)

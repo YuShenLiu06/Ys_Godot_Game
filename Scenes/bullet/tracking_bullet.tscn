@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvx8y7n2m4kqp"]
+
+[ext_resource type="Script" path="res://Scripts/bullet/tracking_bullet.gd" id="1_tracking"]
+[ext_resource type="Texture2D" uid="uid://dewaat5nq8snb" path="res://AssetBundle/Sprites/Bullet.png" id="1_xjght"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tracking"]
+size = Vector2(6, 3)
+
+[node name="TrackingBullet" type="Area2D" groups=["Bullet"]]
+script = ExtResource("1_tracking")
+z_index = 100
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_xjght")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_tracking")

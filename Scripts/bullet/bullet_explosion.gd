@@ -1,7 +1,7 @@
 extends Area2D
 
-@export var explosion_scale : float = 1.0
-var Bullet_damage : float =1.0
+@export var explosion_scale: float = 1.0
+var Bullet_damage: float = 1.0
 
 func _deug():
 	print("[debug] Bullet explosion instantiated")
@@ -24,8 +24,11 @@ func _process(delta: float) -> void:
 #对于本身缩放的控制
 func set_explosion_scale(scale: float) -> void:
 	# print("[debug] Setting explosion scale to: ", scale)
-	$".".scale = Vector2(scale,scale)
+	$".".scale = Vector2(scale, scale)
 
 func clear_itself(wait_time: float):
 	await get_tree().create_timer(wait_time).timeout
 	queue_free()
+
+func get_bullet_type() -> String:
+	return "bullet_explosino"

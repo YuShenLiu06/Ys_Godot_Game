@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cwml6yv3cwxdc" path="res://Scripts/enemy/enemy.gd" id="1_ogr0c"]
 [ext_resource type="PackedScene" uid="uid://bg6o1nvxi7djl" path="res://Scenes/bullet/bullet_explosion.tscn" id="2_1f0kj"]
 
-[node name="enemy" type="Area2D"]
+[node name="enemy" type="Area2D" groups=["enemy"]]
 script = ExtResource("1_ogr0c")
 bullet_explosion_scene = ExtResource("2_1f0kj")
 

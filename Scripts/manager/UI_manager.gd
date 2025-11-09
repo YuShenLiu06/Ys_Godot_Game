@@ -20,7 +20,7 @@ func _ready() -> void:
 # 暂停游戏并显示暂停UI
 func _on_pause_game_requested() -> void:
 	if current_pause_ui != null:
-		return  # 已经显示暂停UI
+		return # 已经显示暂停UI
 	
 	# 创建暂停UI实例
 	current_pause_ui = pause_ui_scene.instantiate()
@@ -44,7 +44,7 @@ func _on_resume_game_requested() -> void:
 # 显示音量控制UI
 func _on_volume_control_requested() -> void:
 	if current_volume_ui != null:
-		return  # 已经显示音量控制UI
+		return # 已经显示音量控制UI
 	
 	# 创建音量控制UI实例
 	current_volume_ui = volume_control_ui_scene.instantiate()
@@ -69,4 +69,3 @@ func show_ui(ui_scene: PackedScene) -> Node:
 func hide_ui(ui_instance: Node) -> void:
 	if ui_instance != null and is_instance_valid(ui_instance):
 		ui_instance.queue_free()
-

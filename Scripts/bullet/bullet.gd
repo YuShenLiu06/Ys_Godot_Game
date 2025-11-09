@@ -11,5 +11,5 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	position += Vector2(bullet_speed*face_derection,0) * delta
 
-
-	
+func get_bullet_type() -> String:
+	return "normal_bullet"

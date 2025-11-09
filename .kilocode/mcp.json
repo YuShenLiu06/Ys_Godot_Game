@@ -1,14 +1,11 @@
 {
   "mcpServers": {
     "git": {
-      "command": "npx",
+      "command": "uvx",
       "args": [
-        "-y",
-        "@modelcontextprotocol/inspector",
-        "uvx",
         "mcp-server-git",
         "--repository",
-        "/path/to/git/repo"
+        "g:/Godot_Games/myfirst-game"
       ]
     }
   }

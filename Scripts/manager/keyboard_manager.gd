@@ -4,24 +4,24 @@ extends Node
 # 使用单例模式管理键盘输入的优先级和上下文
 
 enum InputContext {
-	GAMEPLAY,    # 游戏进行中的输入
-	UI_PAUSE,    # 暂停界面的输入
-	UI_MENU,     # 其他菜单界面的输入
-	DIALOGUE     # 对话界面的输入
+	GAMEPLAY, # 游戏进行中的输入
+	UI_PAUSE, # 暂停界面的输入
+	UI_MENU, # 其他菜单界面的输入
+	DIALOGUE # 对话界面的输入
 }
 
-var current_context: InputContext = InputContext.GAMEPLAY #定义的枚举类型
+var current_context: InputContext = InputContext.GAMEPLAY # 定义的枚举类型
 var input_stack: Array[InputContext] = []
 
 # 信号定义
-signal pause_requested()  # 暂停请求信号
-signal resume_requested()  # 恢复请求信号
+signal pause_requested() # 暂停请求信号
+signal resume_requested() # 恢复请求信号
 
 func _ready() -> void:
 	# 设置为单例，确保只有一个键盘管理器实例
-	process_mode = Node.PROCESS_MODE_ALWAYS #属性中的始终处理（就是右侧检查里面的）
+	process_mode = Node.PROCESS_MODE_ALWAYS # 属性中的始终处理（就是右侧检查里面的）
 
-func _unhandled_input(event: InputEvent) -> void: #在键盘被按下的时候会自动调用该函数
+func _unhandled_input(event: InputEvent) -> void: # 在键盘被按下的时候会自动调用该函数
 	# 只处理键盘按键事件
 	if not event is InputEventKey:
 		return
@@ -71,23 +71,23 @@ func _handle_dialogue_input(event: InputEventKey) -> void:
 func push_context(context: InputContext) -> void:
 	input_stack.append(current_context)
 	current_context = context
-	print("[KeyboardManager] 切换到上下文: ", context)
+	# print("[KeyboardManager] 切换到上下文: ", context)
 
 # 弹出当前输入上下文，返回到上一个
 func pop_context() -> void:
 	if input_stack.size() > 0:
 		current_context = input_stack.pop_back()
-		print("[KeyboardManager] 返回到上下文: ", current_context)
+		# print("[KeyboardManager] 返回到上下文: ", current_context)
 	else:
 		# 如果没有上一个上下文，默认返回到游戏进行中
 		current_context = InputContext.GAMEPLAY
-		print("[KeyboardManager] 返回到默认上下文: ", current_context)
+		# print("[KeyboardManager] 返回到默认上下文: ", current_context)
 
 # 直接设置输入上下文（清空栈）
 func set_context(context: InputContext) -> void:
 	current_context = context
 	input_stack.clear()
-	print("[KeyboardManager] 设置上下文为: ", context)
+	# print("[KeyboardManager] 设置上下文为: ", context)
 
 # 获取当前输入上下文
 func get_context() -> InputContext:

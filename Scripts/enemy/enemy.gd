@@ -1,27 +1,27 @@
 extends Area2D
-class_name Enemy_father #enemy 父节点(必须在最上方)
+class_name Enemy_father # enemy 父节点(必须在最上方)
 
-@export var Enemy_speed : float = 50
-@export var Exp : int = 3
-@export var Health : float = 2.0
-@export var Bullet_damage :	float = 1
-@export var Exp_coefficient : float = 1.0
-@export var explosion_damage : int = 2 #产生爆炸的阈值伤害
-@export var bullet_explosion_scene : PackedScene
-@export var face_derection : int = -1 #1向右 #-1 向左
+@export var Enemy_speed: float = 50
+@export var Exp: int = 3
+@export var Health: float = 2.0
+@export var Bullet_damage: float = 1
+@export var Exp_coefficient: float = 1.0
+@export var explosion_damage: int = 2 # 产生爆炸的阈值伤害
+@export var bullet_explosion_scene: PackedScene
+@export var face_derection: int = -1 # 1向右 #-1 向左
 
-var injured_wait_time : float = 0.25  # 受击动画持续时间
+var injured_wait_time: float = 0.25 # 受击动画持续时间
 
 #控制用变量
 
-var is_dead : bool = false
+var is_dead: bool = false
 
 # 暂停免疫的计时器变量
-var game_time_elapsed : float = 0.0  # 累计游戏时间（不包括暂停时间）
-var lifetime : float = 15.0  # 敌人存活时间（秒）
-var injured_time_elapsed : float = 0.0  # 受伤动画已播放时间
-var death_time_elapsed : float = 0.0  # 死亡动画已播放时间
-var is_injured : bool = false  # 是否正在播放受伤动画
+var game_time_elapsed: float = 0.0 # 累计游戏时间（不包括暂停时间）
+var lifetime: float = 15.0 # 敌人存活时间（秒）
+var injured_time_elapsed: float = 0.0 # 受伤动画已播放时间
+var death_time_elapsed: float = 0.0 # 死亡动画已播放时间
+var is_injured: bool = false # 是否正在播放受伤动画
 
 func _ready() -> void:
 	set_face_derection()
@@ -33,8 +33,7 @@ func _ready() -> void:
 
 # func _init() -> void:
 
-func Clear_itself(_is_choose_time: bool=false) -> void:
-
+func Clear_itself(_is_choose_time: bool = false) -> void:
 	queue_free()
 
 func _physics_process(delta: float) -> void:
@@ -65,7 +64,7 @@ func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
 		
-	position += Vector2(Enemy_speed*face_derection,0) * delta #delta意味着每个帧花费了多少秒 这句话意味着在1s移动100个像素点
+	position += Vector2(Enemy_speed * face_derection, 0) * delta # delta意味着每个帧花费了多少秒 这句话意味着在1s移动100个像素点
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D && !is_dead:
@@ -73,10 +72,6 @@ func _on_body_entered(body: Node2D) -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	var current_scene = get_tree().current_scene
-	# if current_scene:
-	# 	print("[%s][debug] Enemy area entered by: %s | current_scene: %s" % [Time.get_unix_time_from_system(), area.name, current_scene.name])
-	# else:
-	# 	print("[debug] Enemy area entered by: ", area.name, " | current_scene: null")
 	if is_dead:
 		return
 	#如果接触对象是“bullet”scenc
@@ -87,17 +82,17 @@ func _on_area_entered(area: Area2D) -> void:
 	else:
 		return
 	
-	if Health <= 0: #阵亡检测
+	if Health <= 0: # 阵亡检测
 		_on_area_entered_death_zone(area)
 		return
 
-	$AnimatedSprite2D.play("Injured") #受击但并未死亡，播放受击动画
+	$AnimatedSprite2D.play("Injured") # 受击但并未死亡，播放受击动画
 	# 使用自定义计时器替代await，不受暂停影响
 	is_injured = true
 	injured_time_elapsed = 0.0
 
 	
-func spawn_bullet_explosion(position: Vector2,scale: float):
+func spawn_bullet_explosion(position: Vector2, scale: float):
 	var bullet_explosion_instance = bullet_explosion_scene.instantiate()
 	bullet_explosion_instance.position = position
 	bullet_explosion_instance.explosion_scale = scale
@@ -109,13 +104,13 @@ func _on_area_entered_bullet(area: Area2D):
 	area.queue_free() # 删除子弹实体
 	#如果伤害高于爆炸伤害阈值则生成爆炸
 	if Bullet_damage > explosion_damage:
-		spawn_bullet_explosion(area.position,set_explosion_scale(1.2,3))
-	if area.is_in_group("Bullet") && !is_dead: #并未阵亡扣血
-		Health-=Bullet_damage
+		spawn_bullet_explosion(area.position, set_explosion_scale(1.1, 3))
+	if area.is_in_group("Bullet") && !is_dead: # 并未阵亡扣血
+		Health -= Bullet_damage
 
 #通过伤害设置爆炸范围
-func set_explosion_scale(cof_base: float,cof_Denominator: int) -> float:  #可以调整底数和分母系数用来调整爆炸的增炸速度
-	return clamp(cof_base**(1+(Bullet_damage-explosion_damage)/cof_Denominator), 1.0, 5.0)  # 根据伤害调整爆炸范围，限制在5到20之间
+func set_explosion_scale(cof_base: float, cof_Denominator: int) -> float: # 可以调整底数和分母系数用来调整爆炸的增炸速度
+	return clamp(cof_base ** (1 + (Bullet_damage - explosion_damage) / cof_Denominator), 1.0, 5.0) # 根据伤害调整爆炸范围，限制在5到20之间
 
 func _on_area_entered_explosion(area: Area2D):
 	Health -= Bullet_damage
@@ -123,7 +118,7 @@ func _on_area_entered_death_zone(area: Area2D) -> void:
 	$AnimatedSprite2D.play("Death")
 	is_dead = true
 	get_tree().current_scene.Score += 1
-	get_tree().current_scene.Exp += ceil(Exp*Exp_coefficient)  #获得经验*经验系数
+	get_tree().current_scene.Exp += ceil(Exp * Exp_coefficient) # 获得经验*经验系数
 	$Death_Sound.play()
 	
 	# 使用自定义计时器替代await，不受暂停影响
