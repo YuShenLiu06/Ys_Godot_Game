@@ -9,4 +9,5 @@ func _ready() -> void:
 
 	value_changed.connect(func (v: float):
 		VolumeManager.set_volume(bus_index,v)
+		ConfigManager.save_config()
 		) #滑块值变化时设置音量

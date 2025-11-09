@@ -8,7 +8,7 @@
         "markdown": false,
         "scminput": false,
         "yaml": false,
-        "gdscript": true
+        "gdscript": false
     },
     "github.copilot.inlineSuggest.enable": false,
     "github.copilot.advanced": {

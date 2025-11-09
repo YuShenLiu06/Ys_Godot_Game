@@ -1,10 +1,13 @@
 extends Node
 
-#专门用来存储信号
+#专门用来存储信号    
 
 @export var Is_choose_time : bool = false #使用信号而不是全局变量
-@export var tot_Choose_functon : int = 3 #总方法数量
+# @export var tot_Choose_functon : int = 3 #总方法数量
 @export var Is_paused : bool = false #游戏暂停状态
+@export var bullet_model : int = 0 #弹药模式
+
+enum bullet_models {normal_bullet,tracking_bullet}
 
 signal Get_bullet_damage(damage: int) #更行弹药伤害信号
 signal Choose_time(Is_Choose_time: bool) # 选卡时停信号

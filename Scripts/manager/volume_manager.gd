@@ -1,6 +1,6 @@
 extends Node
 
-enum Bus {Master} # 音频总线枚举
+enum Bus {Master,sfx,bgm} # 音频总线枚举
 
 @onready var sfx: Node = $sfx # 音效播放器节点引用
 

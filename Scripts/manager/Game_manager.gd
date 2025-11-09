@@ -20,6 +20,7 @@ var Is_Spawn_slime : bool = true
 
 
 func _ready() -> void:
+	# ConfigManager.load_config()
 	$Mask.visible = false
 	Set_damage(1)
 	#用于初始化信号链接

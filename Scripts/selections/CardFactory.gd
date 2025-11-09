@@ -3,8 +3,14 @@
 class_name CardFactory
 extends RefCounted
 
-# 动态加载所有牌包类的缓存
-static var _all_cards_cache: Array[BaseCard] = []
+# 动态加载所有牌包类的缓存(预加载5个牌包)
+static var _all_cards_cache: Array[BaseCard] = [
+	BulletDamageCard.new(),
+	BulletFireRateCard.new(),
+	ExpGainCard.new(),
+	TrackingBulletMaxLifetimeCard.new(),
+	TrackingBulletTurnSpeedCard.new()
+]
 # 启用的标签列表 - 可以在运行时设置
 static var enabled_tags: Array[String] = ["basic", "tracking_bullet"]  # 默认启用基础牌包和追踪子弹牌包
 

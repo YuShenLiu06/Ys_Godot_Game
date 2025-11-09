@@ -5,13 +5,13 @@ extends CharacterBody2D
 @export var Face_direction : int = 1 #1向右 #-1 向左
 @export var bullet_scene : PackedScene
 @export var tracking_bullet_scene : PackedScene
-@export var bullet_model : int = 0 #默认0为
+# @export var bullet_model : int = 0 #默认0为
 
 # tracking_bullet增强属性
 var tracking_bullet_turn_speed_multiplier: float = 1.0  # 转向速度倍数
 var tracking_bullet_max_lifetime_bonus: float = 0.0  # 最大生存时间加成
 
-enum bullet_models {normal_bullet,tracking_bullet}
+
 
 #sign 判断用
 
@@ -81,8 +81,8 @@ func _on_fire() -> void: #根据Timer信号
 	
 	# 根据设置选择子弹类型
 	var bullet_node
-	match bullet_model:
-		bullet_models.tracking_bullet:
+	match SignalBus.bullet_model:
+		SignalBus.bullet_models.tracking_bullet:
 			if tracking_bullet_scene:
 				bullet_node = tracking_bullet_scene.instantiate()
 				# 设置追踪子弹的玩家引用
@@ -94,7 +94,7 @@ func _on_fire() -> void: #根据Timer信号
 				# 如果追踪子弹场景未设置，回退到普通子弹
 				bullet_node = bullet_scene.instantiate()
 				bullet_node.face_derection = Face_direction
-		bullet_models.normal_bullet:
+		SignalBus.bullet_models.normal_bullet:
 			# 默认使用普通子弹
 			bullet_node = bullet_scene.instantiate()
 			bullet_node.face_derection = Face_direction
