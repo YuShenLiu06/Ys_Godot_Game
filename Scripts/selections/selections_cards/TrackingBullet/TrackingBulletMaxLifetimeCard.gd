@@ -3,11 +3,11 @@ class_name TrackingBulletMaxLifetimeCard
 extends BaseCard
 
 # 最大生存时间增加值
-var max_lifetime_increase: float = 0.2
+var max_lifetime_increase: float = 0.3
 
 func _init():
 	card_name = "追踪子弹最大生存时间提升"
-	description = "追踪子弹最大生存时间+0.2"
+	description = "追踪子弹最大生存时间+0.3"
 	icon_path = ""
 	
 	# 设置标签
@@ -15,7 +15,7 @@ func _init():
 
 func initialize() -> void:
 	# 初始化牌包，可以在这里设置随机增加值等
-	max_lifetime_increase = 0.2
+	# max_lifetime_increase = 0.3
 	description = "追踪子弹最大生存时间+" + str(max_lifetime_increase)
 
 func apply_effect() -> void:

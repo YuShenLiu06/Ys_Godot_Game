@@ -3,11 +3,11 @@ class_name TrackingBulletTurnSpeedCard
 extends BaseCard
 
 # 转向速度系数
-var turn_speed_coefficient: float = 1.1
+var turn_speed_coefficient: float = 1.25
 
 func _init():
 	card_name = "追踪子弹转向速度提升"
-	description = "追踪子弹转向速度*1.1"
+	description = "追踪子弹转向速度*1.2"
 	icon_path = ""
 	
 	# 设置标签
@@ -15,7 +15,7 @@ func _init():
 
 func initialize() -> void:
 	# 初始化牌包，可以在这里设置随机系数等
-	turn_speed_coefficient = 1.1
+	# turn_speed_coefficient = 1.1
 	description = "追踪子弹转向速度*" + str(turn_speed_coefficient)
 
 func apply_effect() -> void:
