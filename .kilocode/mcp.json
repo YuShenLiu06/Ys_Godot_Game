@@ -6,7 +6,9 @@
         "mcp-server-git",
         "--repository",
         "g:/Godot_Games/myfirst-game"
-      ]
+      ],
+      "disabled": false,
+      "alwaysAllow": []
     }
   }
 }

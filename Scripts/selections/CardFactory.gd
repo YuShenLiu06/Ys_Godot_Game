@@ -139,3 +139,4 @@ static func create_random_card_by_enable_tag() ->BaseCard:
 	else:
 		push_error("没有可用的牌包")
 		return null
+

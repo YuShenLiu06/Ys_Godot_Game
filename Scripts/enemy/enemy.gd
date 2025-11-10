@@ -93,6 +93,9 @@ func _on_area_entered(area: Area2D) -> void:
 
 	
 func spawn_bullet_explosion(position: Vector2, scale: float):
+	call_deferred("_spawn_bullet_explosion_deferred", position, scale)
+
+func _spawn_bullet_explosion_deferred(position: Vector2, scale: float):
 	var bullet_explosion_instance = bullet_explosion_scene.instantiate()
 	bullet_explosion_instance.position = position
 	bullet_explosion_instance.explosion_scale = scale
@@ -101,7 +104,7 @@ func spawn_bullet_explosion(position: Vector2, scale: float):
 
 func _on_area_entered_bullet(area: Area2D):
 	#处理触碰子弹事件
-	area.queue_free() # 删除子弹实体
+	area.call_deferred("queue_free") # 使用call_deferred延迟删除子弹实体，避免状态冲突
 	#如果伤害高于爆炸伤害阈值则生成爆炸
 	if Bullet_damage > explosion_damage:
 		spawn_bullet_explosion(area.position, set_explosion_scale(1.1, 3))

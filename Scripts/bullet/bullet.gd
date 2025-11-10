@@ -6,7 +6,7 @@ extends Area2D
 
 func _ready() -> void:
 	await get_tree().create_timer(3).timeout
-	queue_free()
+	call_deferred("queue_free")
 
 func _physics_process(delta: float) -> void:
 	position += Vector2(bullet_speed*face_derection,0) * delta

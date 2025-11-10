@@ -28,7 +28,7 @@ func set_explosion_scale(scale: float) -> void:
 
 func clear_itself(wait_time: float):
 	await get_tree().create_timer(wait_time).timeout
-	queue_free()
+	call_deferred("queue_free")
 
 func get_bullet_type() -> String:
 	return "bullet_explosino"

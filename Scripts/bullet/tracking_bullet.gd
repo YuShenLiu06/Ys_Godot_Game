@@ -8,6 +8,7 @@ class_name TrackingBullet
 @export var max_lifetime : float = 2.0  # 最大生存时间
 @export var target_search_interval : float = 0.1  # 目标搜索间隔
 @export var node_player : Node2D #连接到玩家节点
+@export var shooting_cone : float = 40 # 追踪锥形范围（度）
 
 # 内部状态变量
 var current_direction : Vector2 = Vector2.RIGHT  # 当前移动方向
@@ -23,10 +24,11 @@ func _ready() -> void:
 	# body_entered.connect(_on_body_entered)
 	
 	# 设置初始方向（基于玩家朝向）
-	set_initial_direction()
+	find_nearest_enemy_in_cone(shooting_cone,node_player)
+
+	set_initial_direction(15)
 
 	#查找目标（160°范围内）
-	find_nearest_enemy_in_cone()
 
 
 func _physics_process(delta: float) -> void:
@@ -48,35 +50,65 @@ func _physics_process(delta: float) -> void:
 	# 更新移动方向和位置
 	update_movement(delta)
 
-func set_initial_direction() -> void:
-	# 从玩家获取初始朝向
-	if node_player:
-		current_direction = Vector2(node_player.Face_direction, 0)
+func set_initial_direction(cone_angle) -> void:
+	# 获取玩家朝向作为基准方向
+	var player_direction = Vector2.RIGHT
+	if node_player and "Face_direction" in node_player:
+		player_direction = Vector2(node_player.Face_direction, 0)
+	
+	# 将锥形角度减半，用于左右两侧限制
+	cone_angle /= 2
+	
+	if target and is_instance_valid(target):
+		var enemy_direction = (target.global_position - node_player.global_position).normalized()
+		
+		# 计算敌人方向相对于玩家朝向的夹角
+		var angle_to_enemy = player_direction.angle_to(enemy_direction)
+		
+		# print("[debug][tracking_bullet] angle_to_enemy:",abs(rad_to_deg(angle_to_enemy)),"\n")
 
-func find_nearest_enemy_in_cone() -> void:
+		# 限制角度在锥形范围内，并转换为方向向量
+		var clamped_angle = clamp(rad_to_deg(angle_to_enemy), -cone_angle, cone_angle)
+		current_direction = player_direction.rotated(deg_to_rad(clamped_angle)).normalized()
+	else:
+		# 如果没有目标，使用玩家朝向作为默认方向
+		current_direction = player_direction
+		# print("[debug][tracking_bullet] 没有找到目标，使用玩家朝向\n")
+
+func find_nearest_enemy_in_cone(cone: float,bullet_target: Node2D) -> void:
+	# print("----- [debug][tracking_bullet] -----")
 	# 获取所有敌人
 	var enemies = get_tree().get_nodes_in_group("enemy")
 	if enemies.is_empty():
 		target = null
 		return
 	
-	# 找到90°范围内的最近敌人
+	# 获取玩家朝向作为基准方向
+	var player_direction = Vector2.RIGHT
+	if bullet_target and "Face_direction" in bullet_target:
+		player_direction = Vector2(bullet_target.Face_direction, 0)
+	
+	# 找到锥形范围内的最近敌人
 	var nearest_enemy : Node2D = null
 	var min_distance : float = INF
-	var cone_angle = deg_to_rad(45.0)  #45*2=90度锥形范围
-	
+	var cone_angle = deg_to_rad(cone/2)  # 锥形范围的一半
+	print("[debug][tracking_bullet] cone_angle:",abs(rad_to_deg(cone_angle)),"\n")
+# 
 	for enemy in enemies:
 		# 检查敌人是否存活
 		if enemy.is_dead:
 			continue
-			
-		# 计算敌人相对于子弹当前位置的方向
-		var enemy_direction = (enemy.global_position - global_position).normalized()
 		
-		# 计算敌人方向与当前方向的夹角
-		var angle_to_enemy = current_direction.angle_to(enemy_direction)
+		# print("[debug][tracking_bullet] enemy name:",enemy.name)
+		# 计算敌人相对于玩家位置的方向
+		var enemy_direction = (enemy.global_position - bullet_target.global_position).normalized()
 		
-		# 检查敌人是否在120°范围内
+		# 计算敌人方向相对于玩家朝向的夹角
+		var angle_to_enemy = player_direction.angle_to(enemy_direction)
+		
+		# print("[debug][tracking_bullet] angle_to_enemy:",abs(rad_to_deg(angle_to_enemy)),"\n")
+
+		# 检查敌人是否在锥形范围内
 		if abs(angle_to_enemy) > cone_angle:
 			continue
 			
