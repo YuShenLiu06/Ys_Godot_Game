@@ -11,6 +11,9 @@ extends CharacterBody2D
 var tracking_bullet_turn_speed_multiplier: float = 1.0  # 转向速度倍数
 var tracking_bullet_max_lifetime_bonus: float = 0.0  # 最大生存时间加成
 
+# ultimate天赋加点次数
+
+@export var Ultimate_tracking_bullet : int = 0
 
 
 #sign 判断用
@@ -30,6 +33,7 @@ func _ready() -> void: #游戏开始时被运行
 	SignalBus.Choose_time.connect(Callable(self,"sign_physics_process"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_on_fire"))
 	SignalBus.Pause_game.connect(Callable(self,"sign_Is_processing"))
+	SignalBus.Sel_Tracking_Bullet.connect(Callable(self,"sel_tracking_bullet_apply"))
 
 	velocity = Vector2(50,0) #(x,y)
 	
@@ -88,8 +92,8 @@ func _on_fire() -> void: #根据Timer信号
 				# 设置追踪子弹的玩家引用
 				bullet_node.node_player = self
 				# 应用增强属性
-				bullet_node.turn_speed *= tracking_bullet_turn_speed_multiplier
-				bullet_node.max_lifetime += tracking_bullet_max_lifetime_bonus
+				bullet_node.turn_speed *= (tracking_bullet_turn_speed_multiplier*1.21**clamp((Ultimate_tracking_bullet-1),0,INF))
+				bullet_node.max_lifetime += (tracking_bullet_max_lifetime_bonus+ 0.6*clamp((Ultimate_tracking_bullet-1),0,INF))
 			else:
 				# 如果追踪子弹场景未设置，回退到普通子弹
 				bullet_node = bullet_scene.instantiate()
@@ -116,6 +120,21 @@ func turn():
 func Sel_Bullet_fire_timer(cof):
 	$Timer.wait_time*=cof
 
+# ultimate相关函数实现
+
+# sel_tracking_bullet相关
+
+func sel_tracking_bullet_apply():
+	# 切换到追踪子弹模式
+
+	#牌包新增tag "tracking_bullet" 用于启用追踪子弹牌包
+
+	if CardFactory.enabled_tags.find("tracking_bullet") == -1:
+		CardFactory.enabled_tags.append("tracking_bullet")
+
+	if SignalBus.bullet_model != SignalBus.bullet_models.tracking_bullet:
+		SignalBus.bullet_model = SignalBus.bullet_models.tracking_bullet
+	Ultimate_tracking_bullet += 1
 
 # Sign链接实现
 func sign_Is_processing(Is_Choose_time):

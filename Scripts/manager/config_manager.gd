@@ -15,7 +15,7 @@ func save_config() -> void:
 
 # game_manager设置    
 
-	config.set_value("game_manager","bullet_model",SignalBus.bullet_model)
+	# config.set_value("game_manager","bullet_model",SignalBus.bullet_model)
 
 	config.save(CONFIG_PATH)
 
@@ -37,7 +37,7 @@ func load_config() ->void:
 		VolumeManager.Bus.bgm,config.get_value("audio","bgm",0.5)
 	)
 
-	SignalBus.bullet_model = config.get_value("game_manager","bullet_model",SignalBus.bullet_models.tracking_bullet)
+	# SignalBus.bullet_model = config.get_value("game_manager","bullet_model",SignalBus.bullet_models.tracking_bullet)
 
 #获取
 

@@ -61,12 +61,13 @@ func initialize_by_type(card_type) -> void:
 	initialize_random()
 
 # 便捷方法：通过标签初始化
-func initialize_by_tag(tag: String) -> void:
+func initialize_by_tag(tag: String) -> BaseCard:
 	var card = CardFactory.create_card_by_tag(tag)
 	initialize_card(card)
+	return card
 
 # 便捷方法：随机初始化
-func initialize_random() -> void:
+func initialize_random() -> BaseCard:
 	var card = CardFactory.create_random_enabled_card()
 	if card:
 		initialize_card(card)
@@ -77,9 +78,9 @@ func initialize_random() -> void:
 			initialize_card(card)
 		else:
 			push_error("无法创建任何牌包")
+	return card
 
-
-func initialize_random_by_enable_tag() -> void:
+func initialize_random_by_enable_tag() -> BaseCard:
 	var card = CardFactory.create_random_card_by_enable_tag()
 	if card:
 		initialize_card(card)
@@ -90,3 +91,4 @@ func initialize_random_by_enable_tag() -> void:
 			initialize_card(card)
 		else:
 			push_error("无法创建任何牌包")
+	return card

@@ -26,3 +26,6 @@ signal Sel_Exp_obtain(cof : float) #经验获取
 #tracking_bullet增强信号
 signal Sel_Tracking_Bullet_Turn_Speed(cof : float) #追踪子弹转向速度
 signal Sel_Tracking_Bullet_Max_Lifetime(increase : float) #追踪子弹最大生存时间
+
+#sel ultimate 系列实现
+signal Sel_Tracking_Bullet() #终极追踪子弹

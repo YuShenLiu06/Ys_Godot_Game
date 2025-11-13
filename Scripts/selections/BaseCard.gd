@@ -4,8 +4,8 @@ class_name BaseCard
 extends RefCounted
 
 # 牌包基本信息
-var card_name: String = ""
-var description: String = ""
+var card_name: String = "Base Card"
+var description: String = "Base Card Description"
 var icon_path: String = ""
 
 # 牌包标签 - 单一字符串，代表牌包分组（如"basic"、"expansion1"、"expansion2"等）

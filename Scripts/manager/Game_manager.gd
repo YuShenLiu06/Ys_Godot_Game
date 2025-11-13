@@ -58,7 +58,10 @@ func _physics_process(delta: float) -> void:
 		Exp=0
 		Level+=1
 		# SignalBus.Is_choose_time = true
-		Start_choose_time()
+		if Level == 1:
+			Start_choose_time(2) #初始选卡
+		else:
+			Start_choose_time()
 
 func Spawn_slime():
 	# print("[debug][gm] Spawn_slime:",Is_Spawn_slime)
@@ -88,36 +91,36 @@ func Spawn_enemy(enemy_scene : PackedScene,position_x,range_1: int,range_2: int,
 func show_game_over():
 	Game_over_label.visible = true
 
-func Start_choose_time(): #选项界面创建 
+func Start_choose_time(type: int = 1): #选项界面创建 
 	$Mask.visible = true #蒙版可视性
 	#全局信号
 	SignalBus.Choose_time.emit(true)
-	
-	#生成三张卡片 - 使用新的牌包架构
-	Spawn_Card_New(Choose_scene, Vector2(-276, 55))
-	Spawn_Card_New(Choose_scene, Vector2(-117, 55))
-	Spawn_Card_New(Choose_scene, Vector2(42, 55))
+	match type:
+		1:
+			Choose_Cards()
+			
+		2:
+			Choose_Cards("ultimate",2) #初始选卡
+
 	
 func Close_Choose_time(): #选项界面关闭
 	$Mask.visible = false
 	SignalBus.Choose_time.emit(false)
-	# SignalBus.Is_choose_time = false
-
-func Spawn_Card(Card_scene : PackedScene,Positon_x : int,Positon_y,Select_fuc : int): #对于Card创建（保留旧方法以兼容）
-	var Card_node = Card_scene.instantiate()
-	Card_node.Choose_functon = Select_fuc
-	Card_node.position = Vector2(Positon_x,Positon_y)
-	get_tree().current_scene.add_child(Card_node)
 
 # 新的牌包创建方法 - 使用新的牌包架构
-func Spawn_Card_New(Card_scene : PackedScene, position: Vector2): #对于Card创建
+func Spawn_Card_New(Card_scene : PackedScene, position: Vector2, tag: String, type: int = 1): #对于Card创建
 	var Card_node = Card_scene.instantiate()
 	Card_node.position = position
-	
+	var card
 	# 使用新的随机初始化方法
-	Card_node.initialize_random_by_enable_tag()
+	match type:
+		1:
+			card = Card_node.initialize_random_by_enable_tag()
+		2:
+			card = Card_node.initialize_by_tag(tag)
 	
 	get_tree().current_scene.add_child(Card_node)
+	return card
 
 func Set_damage(Set_damage: float): #子弹伤害设置函数
 	Bullet_Damage = Set_damage
@@ -145,6 +148,20 @@ func _on_resume_requested():
 	if SignalBus.Is_paused:
 		toggle_pause()
 		KeyboardManager.set_context(KeyboardManager.InputContext.GAMEPLAY)
+
+func Choose_Cards(tag: String = "",type: int = 1): #选项卡牌选择实现
+	
+	var Card_1
+	if type == 1:
+		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55),"Basic",type)
+	else:
+		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55),tag,type)
+	Card_1.is_enabled = false 
+	var Card_2 = Spawn_Card_New(Choose_scene, Vector2(-117, 55),tag,type)
+	Card_2.is_enabled = false
+	var Card_3 = Spawn_Card_New(Choose_scene, Vector2(42, 55),tag,type)
+	Card_1.is_enabled = true
+	Card_2.is_enabled = true
 
 # sel相关函数实现
 
