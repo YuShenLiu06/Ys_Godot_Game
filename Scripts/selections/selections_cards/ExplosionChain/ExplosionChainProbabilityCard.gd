@@ -7,7 +7,7 @@ var probability_increase: float = 1.15
 
 func _init():
 	card_name = "爆炸连锁概率提升"
-	description = "爆炸连锁概率*1.15"
+	description = "爆炸连锁概率+0.05"
 	icon_path = ""
 	
 	# 设置标签
@@ -15,7 +15,7 @@ func _init():
 
 func initialize() -> void:
 	# 初始化牌包，可以在这里设置随机增加值等
-	description = "爆炸连锁概率*" + str(probability_increase)
+	description = "爆炸连锁概率*+" + str(probability_increase)
 
 func apply_effect() -> void:
 	# 应用概率提升效果

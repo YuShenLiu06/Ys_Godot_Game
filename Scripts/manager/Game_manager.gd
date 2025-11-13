@@ -211,7 +211,7 @@ func sel_explosion_chain_damage_apply(cof: float):
 
 #explosion_chain概率应用
 func sel_explosion_chain_probability_apply(cof: float):
-	explosion_chain_cof_probability *= cof
+	explosion_chain_cof_probability += cof
 	# 确保概率不超过1.0
 	explosion_chain_cof_probability = min(explosion_chain_cof_probability, 1.0)
 	print("[Game Manager] explosion_chain_probability updated to:", explosion_chain_cof_probability)

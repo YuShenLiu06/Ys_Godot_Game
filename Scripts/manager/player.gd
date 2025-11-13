@@ -8,7 +8,7 @@ extends CharacterBody2D
 # @export var bullet_model : int = 0 #默认0为
 
 # tracking_bullet增强属性
-var tracking_bullet_turn_speed_multiplier: float = 1.0  # 转向速度倍数
+var tracking_bullet_turn_speed_multiplier: float = 0.5  # 转向速度倍数
 var tracking_bullet_max_lifetime_bonus: float = 0.0  # 最大生存时间加成
 
 # ultimate天赋加点次数
