@@ -3,12 +3,12 @@
 
     // 禁用 GitHub Copilot 代码补全功能
     "github.copilot.enable": {
-        "*": true,
+        "*": false,
         "plaintext": false,
         "markdown": false,
         "scminput": false,
         "yaml": false,
-        "gdscript": true
+        "gdscript": false
     },
     "github.copilot.inlineSuggest.enable": false,
     "github.copilot.advanced": {

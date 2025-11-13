@@ -10,7 +10,10 @@ static var _all_cards_cache: Array[BaseCard] = [
 	ExpGainCard.new(),
 	TrackingBulletMaxLifetimeCard.new(),
 	TrackingBulletTurnSpeedCard.new(),
-	SelTrackingBullet.new()
+	SelTrackingBullet.new(),
+	ExplosionChainDamageCard.new(),
+	ExplosionChainProbabilityCard.new(),
+	SelExplosionChain.new()
 ]
 # 启用的标签列表 - 可以在运行时设置
 static var enabled_tags: Array[String] = ["basic"]  # 默认启用基础牌包和追踪子弹牌包
@@ -122,4 +125,3 @@ static func create_random_card_by_enable_tag() ->BaseCard:
 	else:
 		push_error("没有可用的牌包")
 		return BaseCard.new()
-

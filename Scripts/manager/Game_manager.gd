@@ -7,12 +7,18 @@ extends Node2D
 @export var Game_over_label : Label
 @export var Exp_label : Label
 @export var Level_label : Label
+@export var Card_Selection_Label : Label
 @export var Exp : int = 0
 @export var Level : int = 0
 @export var Bullet_Damage : float = 1
 @export var Choose_scene : PackedScene
 @export var Exp_coefficient : float = 1.0  #经验值获取系数
 @export var Camera : Camera2D  # 引用相机节点，用于屏幕抖动效果
+
+#explosion_chain相关全局变量
+@export var Ultimate_exposion_chain : int = 0
+@export var explosion_chain_cof_damage : float = 0.5
+@export var explosion_chain_cof_probability : float = 1 #爆炸链触发概率
 
 #判断用
 
@@ -23,6 +29,7 @@ func _ready() -> void:
 	# ConfigManager.load_config()
 	$Mask.visible = false
 	Set_damage(1)
+	SignalBus.bullet_model = 0
 	#用于初始化信号链接
 	#sel专用连接区
 	SignalBus.Sel_Exp_obtain.connect(Callable(self,"Sel_Exp_obtain"))
@@ -30,6 +37,11 @@ func _ready() -> void:
 	SignalBus.Close_Choose_time.connect(Callable(self,"Close_Choose_time"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_Spawn_slime"))
 	SignalBus.Pause_game.connect(Callable(self,"on_pause_game"))
+	
+	#explosion_chain相关信号连接
+	SignalBus.Sel_Explosion_Chain.connect(Callable(self,"sel_explosion_chain_apply"))
+	SignalBus.Sel_Explosion_Chain_Damage.connect(Callable(self,"sel_explosion_chain_damage_apply"))
+	SignalBus.Sel_Explosion_Chain_Probability.connect(Callable(self,"sel_explosion_chain_probability_apply"))
 	
 	# 连接键盘管理器的信号
 	KeyboardManager.pause_requested.connect(_on_pause_requested)
@@ -50,7 +62,7 @@ func _physics_process(delta: float) -> void:
 	
 	#文本更新
 	Score_label.text = "Score: " + str(Score)
-	Exp_label.text = "Exp:" + str(Exp)
+	Exp_label.text = "Exp:" + str(Exp) + "/" + str(ceil(10*(1.5**Level)))
 	Level_label.text = "Level:" + str(Level)
 	
 	#经验等级更新
@@ -58,7 +70,7 @@ func _physics_process(delta: float) -> void:
 		Exp=0
 		Level+=1
 		# SignalBus.Is_choose_time = true
-		if Level == 1:
+		if Level%10 == 0 or Level == 1:
 			Start_choose_time(2) #初始选卡
 		else:
 			Start_choose_time()
@@ -80,6 +92,11 @@ func Spawn_enemy(enemy_scene : PackedScene,position_x,range_1: int,range_2: int,
 	enemy_node.position = Vector2(position_x,randf_range(range_1,range_2))
 	enemy_node.Bullet_damage = Bullet_Damage
 	enemy_node.Exp_coefficient = Exp_coefficient
+	
+	# 传递explosion_chain相关参数
+	enemy_node.Ultimate_exposion_chain = Ultimate_exposion_chain
+	enemy_node.explosion_chain_cof_damage = explosion_chain_cof_damage
+	enemy_node.explosion_chain_cof_probability = explosion_chain_cof_probability
 
 	# 把节点加入场景，使其 _ready/_init 在场景上下文中运行，
 	# 然后再基于子类可能在初始化时设置的基准 Health 计算并覆盖最终血量
@@ -91,20 +108,27 @@ func Spawn_enemy(enemy_scene : PackedScene,position_x,range_1: int,range_2: int,
 func show_game_over():
 	Game_over_label.visible = true
 
-func Start_choose_time(type: int = 1): #选项界面创建 
+func Start_choose_time(type: int = 1): #选项界面创建
 	$Mask.visible = true #蒙版可视性
 	#全局信号
 	SignalBus.Choose_time.emit(true)
+	
+	# 根据type设置卡牌选择说明文字
 	match type:
 		1:
+			Card_Selection_Label.text = "选择一个强化"
 			Choose_Cards()
-			
 		2:
+			Card_Selection_Label.text = "选择一个终极天赋"
 			Choose_Cards("ultimate",2) #初始选卡
+	
+	# 显示卡牌选择说明Label
+	Card_Selection_Label.visible = true
 
 	
 func Close_Choose_time(): #选项界面关闭
 	$Mask.visible = false
+	Card_Selection_Label.visible = false
 	SignalBus.Choose_time.emit(false)
 
 # 新的牌包创建方法 - 使用新的牌包架构
@@ -153,7 +177,7 @@ func Choose_Cards(tag: String = "",type: int = 1): #选项卡牌选择实现
 	
 	var Card_1
 	if type == 1:
-		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55),"Basic",type)
+		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55),"basic",2)
 	else:
 		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55),tag,type)
 	Card_1.is_enabled = false 
@@ -170,6 +194,27 @@ func Sel_Bullet_damage(cof):
 
 func Sel_Exp_obtain(cof):
 	Exp_coefficient*=cof
+
+#explosion_chain相关处理函数
+func sel_explosion_chain_apply():
+	# 启用爆炸连锁效果
+	print("[Game Manager] explosion_chain enabled")
+	#牌包新增tag "explosion_chain" 用于启用爆炸连锁牌包
+	if CardFactory.enabled_tags.find("explosion_chain") == -1:
+		CardFactory.enabled_tags.append("explosion_chain")
+	
+	Ultimate_exposion_chain += 1
+
+#explosion_chain伤害系数应用
+func sel_explosion_chain_damage_apply(cof: float):
+	explosion_chain_cof_damage *= cof
+
+#explosion_chain概率应用
+func sel_explosion_chain_probability_apply(cof: float):
+	explosion_chain_cof_probability *= cof
+	# 确保概率不超过1.0
+	explosion_chain_cof_probability = min(explosion_chain_cof_probability, 1.0)
+	print("[Game Manager] explosion_chain_probability updated to:", explosion_chain_cof_probability)
 
 # Sign链接实现
 func sign_Is_Spawn_slime(Is_Choose_time):

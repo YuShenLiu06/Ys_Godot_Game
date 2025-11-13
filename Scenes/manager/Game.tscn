@@ -13,7 +13,7 @@
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gl6un"]
 distance = -90.0
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Spawn_timer", "Score_label", "Game_over_label", "Exp_label", "Level_label", "Camera")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Spawn_timer", "Score_label", "Game_over_label", "Exp_label", "Level_label", "Card_Selection_Label", "Camera")]
 y_sort_enabled = true
 script = ExtResource("1_nynpg")
 Slime_scene = ExtResource("2_323vv")
@@ -22,6 +22,7 @@ Score_label = NodePath("CanvasLayer/Score_label")
 Game_over_label = NodePath("CanvasLayer/Gameover_label")
 Exp_label = NodePath("CanvasLayer/Exp_label")
 Level_label = NodePath("CanvasLayer/Level_label")
+Card_Selection_Label = NodePath("CanvasLayer/Card_Selection_Label")
 Choose_scene = ExtResource("3_pkjtk")
 Camera = NodePath("Camera2D")
 
@@ -82,6 +83,29 @@ wait_time = 3.0
 autostart = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Card_Selection_Label" type="Label" parent="CanvasLayer"]
+visible = false
+z_index = 150
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -250.0
+offset_right = 200.0
+offset_bottom = -180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("7_ce0uy")
+theme_override_font_sizes/font_size = 40
+text = "选择一个强化"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Score_label" type="Label" parent="CanvasLayer"]
 offset_left = 22.0

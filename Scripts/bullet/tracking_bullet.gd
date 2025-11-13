@@ -92,7 +92,7 @@ func find_nearest_enemy_in_cone(cone: float,bullet_target: Node2D) -> void:
 	var nearest_enemy : Node2D = null
 	var min_distance : float = INF
 	var cone_angle = deg_to_rad(cone/2)  # 锥形范围的一半
-	print("[debug][tracking_bullet] cone_angle:",abs(rad_to_deg(cone_angle)),"\n")
+	# print("[debug][tracking_bullet] cone_angle:",abs(rad_to_deg(cone_angle)),"\n")
 # 
 	for enemy in enemies:
 		# 检查敌人是否存活

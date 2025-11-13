@@ -1,16 +1,26 @@
 extends Area2D
 class_name Enemy_father # enemy 父节点(必须在最上方)
 
+# 敌人基本属性
 @export var Enemy_speed: float = 50
 @export var Exp: int = 3
 @export var Health: float = 2.0
 @export var Bullet_damage: float = 1
 @export var Exp_coefficient: float = 1.0
-@export var explosion_damage: int = 2 # 产生爆炸的阈值伤害
-@export var bullet_explosion_scene: PackedScene
 @export var face_derection: int = -1 # 1向右 #-1 向左
 
+# 爆炸相关属性
+@export var explosion_damage: int = 2 # 产生爆炸的阈值伤害
+@export var bullet_explosion_scene: PackedScene
+@export var explosion_chain_cof_probability: float = 0.25 # 爆炸连锁概率
+@export var explosion_chain_cof_damage: float = 0.5 # 爆炸连锁伤害系数
+@export var is_explosion_chain: bool = false # 是否连锁过
+
+# 动画相关属性
 var injured_wait_time: float = 0.25 # 受击动画持续时间
+
+#ultimate相关变量
+@export var Ultimate_exposion_chain : int = 0
 
 #控制用变量
 
@@ -92,31 +102,43 @@ func _on_area_entered(area: Area2D) -> void:
 	injured_time_elapsed = 0.0
 
 	
-func spawn_bullet_explosion(position: Vector2, scale: float):
-	call_deferred("_spawn_bullet_explosion_deferred", position, scale)
+func spawn_bullet_explosion(position: Vector2,damage: int = Bullet_damage):
+	call_deferred("_spawn_bullet_explosion_deferred", position, damage)
 
-func _spawn_bullet_explosion_deferred(position: Vector2, scale: float):
+
+
+func _spawn_bullet_explosion_deferred(position: Vector2,damage: int):
 	var bullet_explosion_instance = bullet_explosion_scene.instantiate()
 	bullet_explosion_instance.position = position
-	bullet_explosion_instance.explosion_scale = scale
-	bullet_explosion_instance.Bullet_damage = Bullet_damage
+	# bullet_explosion_instance.explosion_scale = scale
+	bullet_explosion_instance.Bullet_damage = damage
+	bullet_explosion_instance.explosion_damage = explosion_damage
 	get_tree().current_scene.add_child(bullet_explosion_instance)
 
 func _on_area_entered_bullet(area: Area2D):
 	#处理触碰子弹事件
 	area.call_deferred("queue_free") # 使用call_deferred延迟删除子弹实体，避免状态冲突
-	#如果伤害高于爆炸伤害阈值则生成爆炸
-	if Bullet_damage > explosion_damage:
-		spawn_bullet_explosion(area.position, set_explosion_scale(1.1, 3))
+	#如果伤害高于爆炸伤害阈值则生成爆炸或者点了爆炸的终极天赋
+	if Bullet_damage > explosion_damage or Ultimate_exposion_chain > 0:
+		spawn_bullet_explosion(area.position)
+		is_explosion_chain = true
 	if area.is_in_group("Bullet") && !is_dead: # 并未阵亡扣血
 		Health -= Bullet_damage
 
-#通过伤害设置爆炸范围
-func set_explosion_scale(cof_base: float, cof_Denominator: int) -> float: # 可以调整底数和分母系数用来调整爆炸的增炸速度
-	return clamp(cof_base ** (1 + (Bullet_damage - explosion_damage) / cof_Denominator), 1.0, 5.0) # 根据伤害调整爆炸范围，限制在5到20之间
-
+# 当碰上爆炸
 func _on_area_entered_explosion(area: Area2D):
-	Health -= Bullet_damage
+	if Ultimate_exposion_chain > 0:
+		# 根据explosion_chain_cof_probability来概率生成
+		# print("[Enemy] 爆炸连锁")
+		# print("randf():", randf())
+		print("explosion_chain_cof_probability:", explosion_chain_cof_probability)
+		if randf() < explosion_chain_cof_probability and !is_explosion_chain:
+			is_explosion_chain = true
+			await get_tree().create_timer(0.2).timeout
+			spawn_bullet_explosion(position,area.Bullet_damage * explosion_chain_cof_damage)
+			# print("生成连锁爆炸")
+	Health -= area.Bullet_damage
+
 func _on_area_entered_death_zone(area: Area2D) -> void:
 	$AnimatedSprite2D.play("Death")
 	is_dead = true

@@ -14,7 +14,7 @@ var tracking_bullet_max_lifetime_bonus: float = 0.0  # 最大生存时间加成
 # ultimate天赋加点次数
 
 @export var Ultimate_tracking_bullet : int = 0
-
+@export var Ultimate_exposion_chain : int = 0
 
 #sign 判断用
 
@@ -135,6 +135,16 @@ func sel_tracking_bullet_apply():
 	if SignalBus.bullet_model != SignalBus.bullet_models.tracking_bullet:
 		SignalBus.bullet_model = SignalBus.bullet_models.tracking_bullet
 	Ultimate_tracking_bullet += 1
+
+func sel_explosion_chain_apply():
+	# 启用爆炸连锁效果
+
+	#牌包新增tag "explosion_chain" 用于启用爆炸连锁牌包
+
+	if CardFactory.enabled_tags.find("explosion_chain") == -1:
+		CardFactory.enabled_tags.append("explosion_chain")
+
+	Ultimate_exposion_chain += 1
 
 # Sign链接实现
 func sign_Is_processing(Is_Choose_time):
