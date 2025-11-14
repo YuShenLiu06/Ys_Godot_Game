@@ -42,7 +42,7 @@ script = ExtResource("5_p2xgi")
 metadata/_edit_lock_ = true
 
 [node name="Player" parent="." instance=ExtResource("6_v4dpg")]
-position = Vector2(-156, 54)
+position = Vector2(-156, 56)
 
 [node name="Boundary" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
@@ -87,17 +87,14 @@ autostart = true
 [node name="Card_Selection_Label" type="Label" parent="CanvasLayer"]
 visible = false
 z_index = 150
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
 offset_left = -200.0
-offset_top = -250.0
+offset_top = 64.0
 offset_right = 200.0
-offset_bottom = -180.0
+offset_bottom = 134.0
 grow_horizontal = 2
-grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
@@ -178,6 +175,7 @@ horizontal_alignment = 1
 
 [node name="pause_ui" parent="CanvasLayer" instance=ExtResource("9_pause_ui")]
 process_mode = 2
+z_index = 200
 position = Vector2(307, 172)
 
 [node name="selection" parent="." instance=ExtResource("3_pkjtk")]

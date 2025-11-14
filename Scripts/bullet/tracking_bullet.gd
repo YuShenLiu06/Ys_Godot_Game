@@ -26,7 +26,9 @@ func _ready() -> void:
 	# 设置初始方向（基于玩家朝向）
 	find_nearest_enemy_in_cone(shooting_cone,node_player)
 
-	set_initial_direction(15)
+	# set_initial_direction(15)
+
+	set_direction_to_mouse(15)
 
 	#查找目标（160°范围内）
 
@@ -172,6 +174,37 @@ func get_velocity() -> Vector2:
 # 	# 检查是否碰到边界（StaticBody2D且父节点是Boundary）
 # 	if body is StaticBody2D and body.get_parent() and body.get_parent().name == "Boundary":
 # 		queue_free()
+
+func set_direction_to_mouse(cone: float) -> void:
+	# 如果没有玩家节点，使用默认方向
+	if not node_player:
+		rotation = current_direction.angle()
+		return
+	
+	# 获取鼠标位置
+	var mouse_position = get_global_mouse_position()
+	
+	# 获取玩家朝向作为基准方向
+	var player_direction = Vector2.RIGHT
+	if node_player and "Face_direction" in node_player:
+		player_direction = Vector2(node_player.Face_direction, 0)
+	
+	# 计算鼠标相对于玩家位置的方向
+	var mouse_direction = (mouse_position - node_player.global_position).normalized()
+	
+	# 计算鼠标方向相对于玩家朝向的夹角
+	var angle_to_mouse = player_direction.angle_to(mouse_direction)
+	
+	# 将锥形角度减半，用于左右两侧限制
+	cone /= 2
+	
+	# 限制角度在锥形范围内，并转换为方向向量
+	var clamped_angle = clamp(rad_to_deg(angle_to_mouse), -cone, cone)
+	current_direction = player_direction.rotated(deg_to_rad(clamped_angle)).normalized()
+	
+	# 更新子弹朝向
+	rotation = current_direction.angle()
+
 
 func judge_is_enemy_dead() -> bool:
 	if target == null:

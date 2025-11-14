@@ -39,7 +39,6 @@ func _ready() -> void: #游戏开始时被运行
 	
 func _process(delta: float) -> void:
 	# 检测ESC键暂停游戏
-
 	
 	if !Is_processing:
 		return
@@ -47,14 +46,20 @@ func _process(delta: float) -> void:
 		$Running_Sound.stop()
 	elif !$Running_Sound.playing:
 		$Running_Sound.play()
-	if Input.is_action_just_pressed("left") && Face_direction==1: #转向检测
-		turn()
-		Face_direction=-1
-	if Input.is_action_just_pressed("right") && Face_direction==-1: #转向检测
-		turn()
-		Face_direction=1
+	
+	# 根据鼠标位置自动转向
+	update_facing_direction()
+	
+	# 注释掉原来的键盘转向，改为鼠标控制
+	# if Input.is_action_just_pressed("left") && Face_direction==1: #转向检测
+	# 	turn()
+	# 	Face_direction=-1
+	# if Input.is_action_just_pressed("right") && Face_direction==-1: #转向检测
+	# 	turn()
+	# 	Face_direction=1
 
 func _physics_process(delta: float) -> void:	#以固定时间运行
+	turn(Face_direction)
 	if !Is_Game_Over && Is_physics_processing: 
 		velocity=Input.get_vector("left","right","up","down")*move_speed
 		
@@ -98,10 +103,14 @@ func _on_fire() -> void: #根据Timer信号
 				# 如果追踪子弹场景未设置，回退到普通子弹
 				bullet_node = bullet_scene.instantiate()
 				bullet_node.face_derection = Face_direction
+				# 设置玩家引用，用于子弹朝向鼠标
+				bullet_node.node_player = self
 		SignalBus.bullet_models.normal_bullet:
 			# 默认使用普通子弹
 			bullet_node = bullet_scene.instantiate()
 			bullet_node.face_derection = Face_direction
+			# 设置玩家引用，用于子弹朝向鼠标
+			bullet_node.node_player = self
 	
 	bullet_node.position = position
 	get_tree().current_scene.add_child(bullet_node)
@@ -112,10 +121,9 @@ func _on_fire() -> void: #根据Timer信号
 func _reload_scence() -> void:
 	get_tree().reload_current_scene()
 	
-func turn():
-	$".".scale.x = -1
-
-
+func turn(dercetion: int = 1) -> void:
+	if transform.get_scale().y != dercetion:
+		scale.x = -1
 #sel用
 func Sel_Bullet_fire_timer(cof):
 	$Timer.wait_time*=cof
@@ -167,3 +175,17 @@ func Sel_Tracking_Bullet_Turn_Speed(cof: float):
 func Sel_Tracking_Bullet_Max_Lifetime(increase: float):
 	tracking_bullet_max_lifetime_bonus += increase
 	print("追踪子弹最大生存时间加成更新为: ", tracking_bullet_max_lifetime_bonus)
+
+func update_facing_direction() -> void:
+	# 获取鼠标位置
+	var mouse_position = get_global_mouse_position()
+	
+	# 计算鼠标相对于玩家的方向
+	var mouse_direction = (mouse_position - global_position).normalized()
+	
+	# 根据鼠标方向更新玩家朝向
+	if mouse_direction.x > 0:
+		Face_direction = 1
+	elif mouse_direction.x < 0:
+		Face_direction = -1
+	# 如果鼠标在垂直方向，保持当前朝向不变

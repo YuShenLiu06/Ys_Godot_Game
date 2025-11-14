@@ -3,7 +3,7 @@ class_name ExplosionChainProbabilityCard
 extends BaseCard
 
 # 概率增加值
-var probability_increase: float = 1.15
+var probability_increase: float = 0.05
 
 func _init():
 	card_name = "爆炸连锁概率提升"

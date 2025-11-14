@@ -18,7 +18,7 @@ extends Node2D
 #explosion_chain相关全局变量
 @export var Ultimate_exposion_chain : int = 0
 @export var explosion_chain_cof_damage : float = 0.5
-@export var explosion_chain_cof_probability : float = 1 #爆炸链触发概率
+@export var explosion_chain_cof_probability : float = 0.4 #爆炸链触发概率
 
 #判断用
 

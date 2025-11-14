@@ -117,16 +117,21 @@ func _spawn_bullet_explosion_deferred(position: Vector2,damage: int):
 
 func _on_area_entered_bullet(area: Area2D):
 	#处理触碰子弹事件
+	# 提前保存position，避免area被释放后无法访问
+	var area_position = area.position
 	area.call_deferred("queue_free") # 使用call_deferred延迟删除子弹实体，避免状态冲突
 	#如果伤害高于爆炸伤害阈值则生成爆炸或者点了爆炸的终极天赋
 	if Bullet_damage > explosion_damage or Ultimate_exposion_chain > 0:
-		spawn_bullet_explosion(area.position)
+		spawn_bullet_explosion(area_position)
 		is_explosion_chain = true
 	if area.is_in_group("Bullet") && !is_dead: # 并未阵亡扣血
 		Health -= Bullet_damage
 
 # 当碰上爆炸
 func _on_area_entered_explosion(area: Area2D):
+	# 提前保存Bullet_damage，避免area被释放后无法访问
+	var area_bullet_damage = area.Bullet_damage
+	
 	if Ultimate_exposion_chain > 0:
 		# 根据explosion_chain_cof_probability来概率生成
 		# print("[Enemy] 爆炸连锁")
@@ -135,9 +140,12 @@ func _on_area_entered_explosion(area: Area2D):
 		if randf() < explosion_chain_cof_probability and !is_explosion_chain:
 			is_explosion_chain = true
 			await get_tree().create_timer(0.2).timeout
-			spawn_bullet_explosion(position,area.Bullet_damage * explosion_chain_cof_damage)
+			spawn_bullet_explosion(position, area_bullet_damage * explosion_chain_cof_damage)
 			# print("生成连锁爆炸")
-	Health -= area.Bullet_damage
+	Health -= area_bullet_damage
+	await get_tree().create_timer(1).timeout
+	is_explosion_chain = false
+
 
 func _on_area_entered_death_zone(area: Area2D) -> void:
 	$AnimatedSprite2D.play("Death")

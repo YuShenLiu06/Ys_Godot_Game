@@ -8,6 +8,7 @@ size = Vector2(6, 3)
 
 [node name="Bullet" type="Area2D" groups=["Bullet"]]
 script = ExtResource("1_oduel")
+max_angle = 40.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_xjght")
