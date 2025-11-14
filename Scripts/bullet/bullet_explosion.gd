@@ -38,3 +38,4 @@ func get_bullet_type() -> String:
 
 func calculate_explosion_scale(cof_base: float, cof_Denominator: int) -> float: # 可以调整底数和分母系数用来调整爆炸的增炸速度
 	return clamp(cof_base ** (1 + (Bullet_damage - explosion_damage) / cof_Denominator), 1.0, 3.0) # 根据伤害调整爆炸范围，限制在5到20之间
+

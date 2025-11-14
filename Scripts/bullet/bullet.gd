@@ -8,6 +8,10 @@ extends Area2D
 
 var current_direction : Vector2 = Vector2.RIGHT  # 当前移动方向
 
+# ulimated_penetrate 用于记录 终极天赋-穿透相关变量
+
+var alredy_hit_list: Array = [] #记录已经击中的物体，防止重复击中
+
 func _ready() -> void:
 	# 设置初始方向朝向鼠标位置
 	set_direction_to_mouse(max_angle)
@@ -48,6 +52,9 @@ func set_direction_to_mouse(cone: float) -> void:
 	
 	# 更新子弹朝向
 	rotation = current_direction.angle()
+
+func judge_hit_in_past(enemy: Node) -> bool: # 判断是否已经击中过
+	return alredy_hit_list.find(enemy) != -1
 
 func get_bullet_type() -> String:
 	return "normal_bullet"

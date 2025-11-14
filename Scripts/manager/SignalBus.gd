@@ -30,7 +30,12 @@ signal Sel_Tracking_Bullet_Max_Lifetime(increase : float) #追踪子弹最大生
 #sel ultimate 系列实现
 signal Sel_Tracking_Bullet() #终极追踪子弹
 signal Sel_Explosion_Chain() #终极爆炸连锁
+signal Sel_Penetrate() #终极穿透
 
 #explosion_chain增强信号
 signal Sel_Explosion_Chain_Damage(cof : float) #爆炸连锁伤害系数
 signal Sel_Explosion_Chain_Probability(cof : float) #爆炸连锁概率
+
+#penetrate增强信号
+signal Sel_Penetrate_Damage_Cof(cof : float) #穿透伤害系数
+signal Sel_Penetrate_Probability(cof : float) #穿透概率

@@ -16,6 +16,10 @@ var target : Node2D = null  # 当前追踪目标
 var time_elapsed : float = 0.0  # 生存时间计时器
 var target_search_timer : float = 0.1  # 目标搜索计时器
 
+# ulimated_penetrate 用于记录 终极天赋-穿透相关变量
+
+var alredy_hit_list: Array = [] #记录已经击中的物体，防止重复击中
+
 func _ready() -> void:
 	# 添加到Bullet组，保持与原子弹系统的兼容性
 	add_to_group("Bullet")
@@ -215,3 +219,6 @@ func judge_is_enemy_dead() -> bool:
 
 func get_bullet_type() -> String:
 	return "tracking_bullet"
+
+func judge_hit_in_past(enemy: Node) -> bool: # 判断是否已经击中过
+	return alredy_hit_list.find(enemy) != -1

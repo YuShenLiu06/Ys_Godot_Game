@@ -20,6 +20,11 @@ extends Node2D
 @export var explosion_chain_cof_damage : float = 0.5
 @export var explosion_chain_cof_probability : float = 0.4 #爆炸链触发概率
 
+#ultimate_penetrate相关全局变量
+@export var Ultimate_penetrate : int = 0
+@export var penetrate_damage_cof : float = 0.5 #穿透伤害系数
+@export var penetrate_probability : float = 0.4 #穿透触发概率
+
 #判断用
 
 var Is_Spawn_slime : bool = true
@@ -42,6 +47,11 @@ func _ready() -> void:
 	SignalBus.Sel_Explosion_Chain.connect(Callable(self,"sel_explosion_chain_apply"))
 	SignalBus.Sel_Explosion_Chain_Damage.connect(Callable(self,"sel_explosion_chain_damage_apply"))
 	SignalBus.Sel_Explosion_Chain_Probability.connect(Callable(self,"sel_explosion_chain_probability_apply"))
+	
+	#penetrate相关信号连接
+	SignalBus.Sel_Penetrate.connect(Callable(self,"sel_penetrate_apply"))
+	SignalBus.Sel_Penetrate_Damage_Cof.connect(Callable(self,"sel_penetrate_damage_cof_apply"))
+	SignalBus.Sel_Penetrate_Probability.connect(Callable(self,"sel_penetrate_probability_apply"))
 	
 	# 连接键盘管理器的信号
 	KeyboardManager.pause_requested.connect(_on_pause_requested)
@@ -97,6 +107,11 @@ func Spawn_enemy(enemy_scene : PackedScene,position_x,range_1: int,range_2: int,
 	enemy_node.Ultimate_exposion_chain = Ultimate_exposion_chain
 	enemy_node.explosion_chain_cof_damage = explosion_chain_cof_damage
 	enemy_node.explosion_chain_cof_probability = explosion_chain_cof_probability
+
+	#传递ultimate_penetrate相关参数
+	enemy_node.penetrate_damage_cof = penetrate_damage_cof
+	enemy_node.penetrate_probability = penetrate_probability
+	enemy_node.Ultimate_penetrate = Ultimate_penetrate
 
 	# 把节点加入场景，使其 _ready/_init 在场景上下文中运行，
 	# 然后再基于子类可能在初始化时设置的基准 Health 计算并覆盖最终血量
@@ -215,6 +230,28 @@ func sel_explosion_chain_probability_apply(cof: float):
 	# 确保概率不超过1.0
 	explosion_chain_cof_probability = min(explosion_chain_cof_probability, 1.0)
 	print("[Game Manager] explosion_chain_probability updated to:", explosion_chain_cof_probability)
+
+#penetrate相关处理函数
+func sel_penetrate_apply():
+	# 启用穿透效果
+	print("[Game Manager] penetrate enabled")
+	#牌包新增tag "penetrate" 用于启用穿透牌包
+	if CardFactory.enabled_tags.find("penetrate") == -1:
+		CardFactory.enabled_tags.append("penetrate")
+
+	Ultimate_penetrate += 1
+
+#penetrate伤害系数应用
+func sel_penetrate_damage_cof_apply(cof: float):
+	penetrate_damage_cof *= cof
+	print("[Game Manager] penetrate_damage_cof updated to:", penetrate_damage_cof)
+
+#penetrate概率应用
+func sel_penetrate_probability_apply(cof: float):
+	penetrate_probability += cof
+	# 确保概率不超过1.0
+	penetrate_probability = min(penetrate_probability, 1.0)
+	print("[Game Manager] penetrate_probability updated to:", penetrate_probability)
 
 # Sign链接实现
 func sign_Is_Spawn_slime(Is_Choose_time):

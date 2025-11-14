@@ -16,11 +16,17 @@ class_name Enemy_father # enemy 父节点(必须在最上方)
 @export var explosion_chain_cof_damage: float = 0.5 # 爆炸连锁伤害系数
 @export var is_explosion_chain: bool = false # 是否连锁过
 
+# 穿透相关属性
+
+@export var penetrate_probability: float = 0.5 # 穿透概率
+@export var penetrate_damage_cof: float = 0.5 # 穿透伤害系数
+
 # 动画相关属性
 var injured_wait_time: float = 0.25 # 受击动画持续时间
 
 #ultimate相关变量
 @export var Ultimate_exposion_chain : int = 0
+@export var Ultimate_penetrate : int = 0
 
 #控制用变量
 
@@ -119,13 +125,24 @@ func _on_area_entered_bullet(area: Area2D):
 	#处理触碰子弹事件
 	# 提前保存position，避免area被释放后无法访问
 	var area_position = area.position
-	area.call_deferred("queue_free") # 使用call_deferred延迟删除子弹实体，避免状态冲突
+	var area_bullet_damage = area.Damage
+	if area.judge_hit_in_past(self):
+		return
+	else:
+		area.alredy_hit_list.append(self)
+	# 穿透逻辑：基础概率 + 终极穿透加成
+	var final_penetrate_probability = penetrate_probability+ clamp(Ultimate_penetrate,1,INF)*0.1
+	
+	if randf() < final_penetrate_probability and Ultimate_penetrate > 0: # 穿透
+		area.Damage *= penetrate_damage_cof*1.44**clamp(Ultimate_penetrate,1,INF)
+	else:
+		area.call_deferred("queue_free") # 使用call_deferred延迟删除子弹实体，避免状态冲突
 	#如果伤害高于爆炸伤害阈值则生成爆炸或者点了爆炸的终极天赋
-	if Bullet_damage > explosion_damage or Ultimate_exposion_chain > 0:
-		spawn_bullet_explosion(area_position)
+	if area_bullet_damage > explosion_damage or Ultimate_exposion_chain > 0:
+		spawn_bullet_explosion(area_position,area_bullet_damage)
 		is_explosion_chain = true
 	if area.is_in_group("Bullet") && !is_dead: # 并未阵亡扣血
-		Health -= Bullet_damage
+		Health -= area_bullet_damage
 
 # 当碰上爆炸
 func _on_area_entered_explosion(area: Area2D):
@@ -137,10 +154,10 @@ func _on_area_entered_explosion(area: Area2D):
 		# print("[Enemy] 爆炸连锁")
 		# print("randf():", randf())
 		print("explosion_chain_cof_probability:", explosion_chain_cof_probability)
-		if randf() < explosion_chain_cof_probability and !is_explosion_chain:
+		if randf() < clamp(explosion_chain_cof_probability+clamp(Ultimate_exposion_chain,0,1)*0.1,0,1) and !is_explosion_chain:
 			is_explosion_chain = true
 			await get_tree().create_timer(0.2).timeout
-			spawn_bullet_explosion(position, area_bullet_damage * explosion_chain_cof_damage)
+			spawn_bullet_explosion(position, area_bullet_damage * clamp(explosion_chain_cof_damage*1.5625**clamp(Ultimate_exposion_chain,0,1),1,INF))
 			# print("生成连锁爆炸")
 	Health -= area_bullet_damage
 	await get_tree().create_timer(1).timeout

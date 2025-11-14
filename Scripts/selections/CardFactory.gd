@@ -13,7 +13,10 @@ static var _all_cards_cache: Array[BaseCard] = [
 	SelTrackingBullet.new(),
 	ExplosionChainDamageCard.new(),
 	ExplosionChainProbabilityCard.new(),
-	SelExplosionChain.new()
+	SelExplosionChain.new(),
+	SelPenetrate.new(),
+	PenetrateDamageCard.new(),
+	PenetrateProbabilityCard.new()
 ]
 # 启用的标签列表 - 可以在运行时设置
 static var enabled_tags: Array[String] = ["basic"]  # 默认启用基础牌包和追踪子弹牌包
