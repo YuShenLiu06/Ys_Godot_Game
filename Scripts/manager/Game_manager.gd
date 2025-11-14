@@ -234,7 +234,7 @@ func sel_explosion_chain_probability_apply(cof: float):
 #penetrate相关处理函数
 func sel_penetrate_apply():
 	# 启用穿透效果
-	print("[Game Manager] penetrate enabled")
+	# print("[Game Manager] penetrate enabled")
 	#牌包新增tag "penetrate" 用于启用穿透牌包
 	if CardFactory.enabled_tags.find("penetrate") == -1:
 		CardFactory.enabled_tags.append("penetrate")

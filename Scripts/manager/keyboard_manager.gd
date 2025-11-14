@@ -7,7 +7,8 @@ enum InputContext {
 	GAMEPLAY, # 游戏进行中的输入
 	UI_PAUSE, # 暂停界面的输入
 	UI_MENU, # 其他菜单界面的输入
-	DIALOGUE # 对话界面的输入
+	DIALOGUE, # 对话界面的输入
+	DEBUG_CONSOLE # 调试控制台的输入
 }
 
 var current_context: InputContext = InputContext.GAMEPLAY # 定义的枚举类型
@@ -40,12 +41,17 @@ func _unhandled_input(event: InputEvent) -> void: # 在键盘被按下的时候�
 			_handle_menu_ui_input(event)
 		InputContext.DIALOGUE:
 			_handle_dialogue_input(event)
+		InputContext.DEBUG_CONSOLE:
+			_handle_debug_console_input(event)
 
 # 处理游戏进行中的输入
 func _handle_gameplay_input(event: InputEventKey) -> void:
 	if event.keycode == KEY_ESCAPE:
 		# 在游戏进行中，ESC键触发暂停
 		pause_requested.emit()
+	elif event.keycode == KEY_F1:
+		# F1键切换调试控制台
+		_toggle_debug_console()
 
 # 处理暂停界面的输入
 func _handle_pause_ui_input(event: InputEventKey) -> void:
@@ -66,6 +72,15 @@ func _handle_dialogue_input(event: InputEventKey) -> void:
 	if event.keycode == KEY_ESCAPE:
 		# 默认行为：跳过对话或关闭对话界面
 		pop_context()
+	elif event.keycode == KEY_F1:
+		# F1键切换调试控制台
+		_toggle_debug_console()
+
+# 处理调试控制台的输入
+func _handle_debug_console_input(event: InputEventKey) -> void:
+	if event.keycode == KEY_F1:
+		# F1键关闭调试控制台
+		_toggle_debug_console()
 
 # 推送新的输入上下文
 func push_context(context: InputContext) -> void:
@@ -100,3 +115,10 @@ func is_in_ui_context() -> bool:
 # 检查是否在暂停界面
 func is_in_pause_context() -> bool:
 	return current_context == InputContext.UI_PAUSE
+
+# 切换调试控制台
+func _toggle_debug_console() -> void:
+	# 查找调试控制台节点
+	var console = get_tree().current_scene.get_node_or_null("DebugConsole")
+	if console:
+		console.toggle_console()

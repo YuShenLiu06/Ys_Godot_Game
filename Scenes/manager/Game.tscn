@@ -9,6 +9,7 @@
 [ext_resource type="FontFile" uid="uid://d205ajxmhvyn7" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="7_ce0uy"]
 [ext_resource type="Texture2D" uid="uid://8tkdgaf5pwgr" path="res://AssetBundle/Sprites/Mask.png" id="8_yqas3"]
 [ext_resource type="PackedScene" uid="uid://dvn17wgwo56kl" path="res://Scenes/UI/pause_ui.tscn" id="9_pause_ui"]
+[ext_resource type="PackedScene" uid="uid://debug_console" path="res://Scenes/UI/debug_console.tscn" id="10_debug_console"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gl6un"]
 distance = -90.0
@@ -177,6 +178,9 @@ horizontal_alignment = 1
 process_mode = 2
 z_index = 200
 position = Vector2(307, 172)
+
+[node name="DebugConsole" parent="CanvasLayer" instance=ExtResource("10_debug_console")]
+z_index = 300
 
 [node name="selection" parent="." instance=ExtResource("3_pkjtk")]
 position = Vector2(-488, 306)
