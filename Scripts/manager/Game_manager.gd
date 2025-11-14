@@ -14,6 +14,7 @@ extends Node2D
 @export var Choose_scene : PackedScene
 @export var Exp_coefficient : float = 1.0  #经验值获取系数
 @export var Camera : Camera2D  # 引用相机节点，用于屏幕抖动效果
+@export var enemy_health_cof_base : float = 1.1 #敌人血量系数
 
 #explosion_chain相关全局变量
 @export var Ultimate_exposion_chain : int = 0
