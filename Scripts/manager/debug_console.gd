@@ -58,6 +58,7 @@ func _init_commands() -> void:
 	commands["bullet"] = _cmd_bullet
 	commands["ultimate"] = _cmd_ultimate
 	commands["choose"] = _cmd_choose
+	commands["spawn"] = _cmd_spawn
 
 func _input(event: InputEvent) -> void:
 	# 检测控制台开关快捷键 (F1)
@@ -169,15 +170,18 @@ func _add_output(text: String, color: Color = Color.WHITE, is_user_input: bool =
 # 指令实现
 func _cmd_help(args: Array[String]) -> void:
 	_add_output("可用指令列表:", Color.CYAN)
-	_add_output("/exp add <amount> - 增加经验值", Color.WHITE)
-	_add_output("/level set <amount> - 设置等级", Color.WHITE)
-	_add_output("/bullet model set <type> - 设置子弹类型 (0:普通, 1:追踪)", Color.WHITE)
-	_add_output("/ultimate <type> add <amount> - 增加终极技能次数", Color.WHITE)
+	_add_output("exp add <amount> - 增加经验值", Color.WHITE)
+	_add_output("level set <amount> - 设置等级", Color.WHITE)
+	_add_output("bullet model set <type> - 设置子弹类型 (0:普通, 1:追踪)", Color.WHITE)
+	_add_output("ultimate <type> add <amount> - 增加终极技能次数", Color.WHITE)
 	_add_output("  type: tracking_bullet, explosion_chain, penetrate", Color.GRAY)
-	_add_output("/choose <type> - 触发选卡界面", Color.WHITE)
+	_add_output("choose <type> - 触发选卡界面", Color.WHITE)
 	_add_output("  type: 1 (普通强化), 2 (终极天赋)", Color.GRAY)
-	_add_output("/clear - 清空控制台", Color.WHITE)
-	_add_output("/help - 显示帮助信息", Color.WHITE)
+	_add_output("spawn <tscn> <x> <y> - 在指定位置生成敌人", Color.WHITE)
+	_add_output("  tscn: normal_slime, test_enemy", Color.GRAY)
+	_add_output("  x, y: 生成位置的坐标", Color.GRAY)
+	_add_output("clear - 清空控制台", Color.WHITE)
+	_add_output("help - 显示帮助信息", Color.WHITE)
 
 func _cmd_clear(args: Array[String]) -> void:
 	# 清空输出容器
@@ -313,6 +317,74 @@ func _cmd_choose(args: Array[String]) -> void:
 	
 	var type_name = "普通强化" if choose_type == 1 else "终极天赋"
 	_add_output("已触发" + type_name + "选卡界面", Color.GREEN)
+
+func _cmd_spawn(args: Array[String]) -> void:
+	if args.size() < 4:
+		_add_output("用法: /spawn <tscn> <x> <y>", Color.RED)
+		_add_output("tscn: normal_slime, test_enemy", Color.YELLOW)
+		_add_output("x, y: 生成位置的坐标", Color.YELLOW)
+		return
+	
+	var enemy_type = args[1]
+	var x = args[2].to_float()
+	var y = args[3].to_float()
+	
+	# 验证敌人类型
+	if enemy_type != "normal_slime" and enemy_type != "test_enemy":
+		_add_output("错误: 不支持的敌人类型: " + enemy_type, Color.RED)
+		_add_output("支持的类型: normal_slime, test_enemy", Color.YELLOW)
+		return
+	
+	# 验证坐标
+	if is_nan(x) or is_nan(y):
+		_add_output("错误: 坐标必须是有效数字", Color.RED)
+		return
+	
+	if not game_manager:
+		_add_output("错误: 无法获取游戏管理器引用", Color.RED)
+		return
+	
+	# 加载敌人场景
+	var enemy_scene_path = ""
+	match enemy_type:
+		"normal_slime":
+			enemy_scene_path = "res://Scenes/enemy/normal_slime.tscn"
+		"test_enemy":
+			enemy_scene_path = "res://Scenes/enemy/test_enemy.tscn"
+	
+	var enemy_scene = load(enemy_scene_path)
+	if not enemy_scene:
+		_add_output("错误: 无法加载敌人场景: " + enemy_scene_path, Color.RED)
+		return
+	
+	# 调用游戏管理器的Spawn_enemy函数
+	var position = Vector2(x, y)
+	var enemy_node = enemy_scene.instantiate()
+	
+	# 设置敌人基本属性
+	enemy_node.position = position
+	enemy_node.face_derection = 1  # 默认向右
+	enemy_node.Bullet_damage = game_manager.Bullet_Damage
+	enemy_node.Exp_coefficient = game_manager.Exp_coefficient
+	
+	# 传递explosion_chain相关参数
+	enemy_node.Ultimate_exposion_chain = game_manager.Ultimate_exposion_chain
+	enemy_node.explosion_chain_cof_damage = game_manager.explosion_chain_cof_damage
+	enemy_node.explosion_chain_cof_probability = game_manager.explosion_chain_cof_probability
+	
+	# 传递ultimate_penetrate相关参数
+	enemy_node.penetrate_damage_cof = game_manager.penetrate_damage_cof
+	enemy_node.penetrate_probability = game_manager.penetrate_probability
+	enemy_node.Ultimate_penetrate = game_manager.Ultimate_penetrate
+	
+	# 将敌人添加到场景
+	get_tree().current_scene.add_child(enemy_node)
+	
+	# 计算并设置血量
+	var enemy_health_cof_base = 1.1  # 默认血量系数
+	enemy_node.Health = game_manager.comput_enemy_health(enemy_node.Health, enemy_health_cof_base)
+	
+	_add_output("成功在位置 (" + str(x) + ", " + str(y) + ") 生成敌人: " + enemy_type, Color.GREEN)
 
 # 同步输出到引擎调试输出台
 func _sync_to_debug_output(text: String, is_user_input: bool = false) -> void:
