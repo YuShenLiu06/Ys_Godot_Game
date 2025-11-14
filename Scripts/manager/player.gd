@@ -6,6 +6,7 @@ extends CharacterBody2D
 @export var bullet_scene : PackedScene
 @export var tracking_bullet_scene : PackedScene
 # @export var bullet_model : int = 0 #默认0为
+@export var bullet_damage : int = 1
 
 # tracking_bullet增强属性
 var tracking_bullet_turn_speed_multiplier: float = 0.5  # 转向速度倍数
@@ -29,6 +30,7 @@ func _ready() -> void: #游戏开始时被运行
 	SignalBus.Sel_Bullet_fire_timer.connect(Sel_Bullet_fire_timer)
 	SignalBus.Sel_Tracking_Bullet_Turn_Speed.connect(Sel_Tracking_Bullet_Turn_Speed)
 	SignalBus.Sel_Tracking_Bullet_Max_Lifetime.connect(Sel_Tracking_Bullet_Max_Lifetime)
+	SignalBus.Get_bullet_damage.connect(Get_bullet_damage)
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_processing"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_physics_process"))
 	SignalBus.Choose_time.connect(Callable(self,"sign_Is_on_fire"))
@@ -95,6 +97,7 @@ func _on_fire() -> void: #根据Timer信号
 			if tracking_bullet_scene:
 				bullet_node = tracking_bullet_scene.instantiate()
 				# 设置追踪子弹的玩家引用
+				bullet_node.Damage = bullet_damage
 				bullet_node.node_player = self
 				# 应用增强属性
 				bullet_node.turn_speed *= (tracking_bullet_turn_speed_multiplier*1.21**clamp((Ultimate_tracking_bullet-1),0,INF))
@@ -103,12 +106,14 @@ func _on_fire() -> void: #根据Timer信号
 				# 如果追踪子弹场景未设置，回退到普通子弹
 				bullet_node = bullet_scene.instantiate()
 				bullet_node.face_derection = Face_direction
+				bullet_node.Damage = bullet_damage
 				# 设置玩家引用，用于子弹朝向鼠标
 				bullet_node.node_player = self
 		SignalBus.bullet_models.normal_bullet:
 			# 默认使用普通子弹
 			bullet_node = bullet_scene.instantiate()
 			bullet_node.face_derection = Face_direction
+			bullet_node.Damage = bullet_damage
 			# 设置玩家引用，用于子弹朝向鼠标
 			bullet_node.node_player = self
 	
@@ -127,6 +132,9 @@ func turn(dercetion: int = 1) -> void:
 #sel用
 func Sel_Bullet_fire_timer(cof):
 	$Timer.wait_time*=cof
+func Get_bullet_damage(damage):
+	bullet_damage = damage
+
 
 # ultimate相关函数实现
 

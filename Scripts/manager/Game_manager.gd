@@ -141,7 +141,6 @@ func Start_choose_time(type: int = 1): #选项界面创建
 	# 显示卡牌选择说明Label
 	Card_Selection_Label.visible = true
 
-	
 func Close_Choose_time(): #选项界面关闭
 	$Mask.visible = false
 	Card_Selection_Label.visible = false
