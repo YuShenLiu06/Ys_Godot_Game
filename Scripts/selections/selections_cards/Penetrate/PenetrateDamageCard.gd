@@ -15,6 +15,7 @@ func initialize() -> void:
 	# 初始化牌包，设置随机系数
 	description = "穿透伤害系数*" + str(damage_coefficient) + "倍"
 	# 存储系数供apply_effect使用
+	card_tag = "penetrate"  # 穿透牌包
 
 
 func apply_effect() -> void:
