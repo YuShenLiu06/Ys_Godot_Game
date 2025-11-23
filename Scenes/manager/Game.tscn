@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://bupskstlge2ex"]
 
 [ext_resource type="Script" uid="uid://cvnvefmmpgl3f" path="res://Scripts/manager/Game_manager.gd" id="1_nynpg"]
-[ext_resource type="PackedScene" uid="uid://deiu5ksacr04m" path="res://Scenes/enemy/normal_slime.tscn" id="2_323vv"]
+[ext_resource type="PackedScene" uid="uid://deiu5ksacr04m" path="res://Scenes/enemy/slime/normal_slime.tscn" id="2_323vv"]
 [ext_resource type="PackedScene" uid="uid://ckw5fh7ind2n7" path="res://Scenes/slections/selection.tscn" id="3_pkjtk"]
 [ext_resource type="Texture2D" uid="uid://bxoj2wd06ogns" path="res://AssetBundle/Sprites/ForestBackground.png" id="4_dewy0"]
 [ext_resource type="Script" uid="uid://byu5gvx28lukj" path="res://Scripts/tools/screen_shake.gd" id="5_p2xgi"]

@@ -15,7 +15,7 @@ func _init():
 
 func initialize() -> void:
 	# 初始化牌包，可以在这里设置随机增加值等
-	description = "爆炸连锁概率*+" + str(probability_increase)
+	description = "爆炸连锁概率*" + str(probability_increase)
 
 func apply_effect() -> void:
 	# 应用概率提升效果

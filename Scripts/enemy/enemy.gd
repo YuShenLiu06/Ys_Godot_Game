@@ -8,6 +8,8 @@ class_name Enemy_father # enemy 父节点(必须在最上方)
 @export var Bullet_damage: float = 1
 @export var Exp_coefficient: float = 1.0
 @export var face_derection: int = -1 # 1向右 #-1 向左
+var is_enabled : bool = true # 是否启用
+var enemy_weight : int = 50 # 敌人权重
 
 # 爆炸相关属性
 @export var explosion_damage: int = 2 # 产生爆炸的阈值伤害
@@ -175,10 +177,13 @@ func _on_area_entered_death_zone(area: Area2D) -> void:
 	death_time_elapsed = 0.0
 
 func set_face_derection():
+	# 保存原始的 y 轴比例，只修改 x 轴比例
+	var original_scale_y = scale.y
 	if face_derection == 1:
-		$".".scale.x = -1
+		scale.x = -abs(scale.x) # 确保是负值，但保持原始大小
 	else:
-		$".".scale.x = 1
+		scale.x = abs(scale.x) # 确保是正值，但保持原始大小
+	scale.y = original_scale_y # 恢复 y 轴比例
 
 
 # 暂停信号处理函数
@@ -187,3 +192,10 @@ func on_pause_game(is_paused: bool) -> void:
 	pass
 
 #sel系列
+
+
+# enemy factroy系列
+
+# 判断是否处于激活状态
+func _is_enabled() -> bool:
+	return is_enabled

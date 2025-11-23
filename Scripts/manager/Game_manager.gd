@@ -1,34 +1,34 @@
 extends Node2D
 
-@export var Slime_scene : PackedScene
-@export var Spawn_timer : Timer
-@export var Score : int = 0
-@export var Score_label : Label
-@export var Game_over_label : Label
-@export var Exp_label : Label
-@export var Level_label : Label
-@export var Card_Selection_Label : Label
-@export var Exp : int = 0
-@export var Level : int = 0
-@export var Bullet_Damage : float = 1
-@export var Choose_scene : PackedScene
-@export var Exp_coefficient : float = 1.0  #经验值获取系数
-@export var Camera : Camera2D  # 引用相机节点，用于屏幕抖动效果
-@export var enemy_health_cof_base : float = 1.1 #敌人血量系数
+@export var Slime_scene: PackedScene
+@export var Spawn_timer: Timer
+@export var Score: int = 0
+@export var Score_label: Label
+@export var Game_over_label: Label
+@export var Exp_label: Label
+@export var Level_label: Label
+@export var Card_Selection_Label: Label
+@export var Exp: int = 0
+@export var Level: int = 0
+@export var Bullet_Damage: float = 1
+@export var Choose_scene: PackedScene
+@export var Exp_coefficient: float = 1.0 # 经验值获取系数
+@export var Camera: Camera2D # 引用相机节点，用于屏幕抖动效果
+@export var enemy_health_cof_base: float = 1.1 # 敌人血量系数
 
 #explosion_chain相关全局变量
-@export var Ultimate_exposion_chain : int = 0
-@export var explosion_chain_cof_damage : float = 0.5
-@export var explosion_chain_cof_probability : float = 0.4 #爆炸链触发概率
+@export var Ultimate_exposion_chain: int = 0
+@export var explosion_chain_cof_damage: float = 0.5
+@export var explosion_chain_cof_probability: float = 0.4 # 爆炸链触发概率
 
 #ultimate_penetrate相关全局变量
-@export var Ultimate_penetrate : int = 0
-@export var penetrate_damage_cof : float = 0.5 #穿透伤害系数
-@export var penetrate_probability : float = 0.4 #穿透触发概率
+@export var Ultimate_penetrate: int = 0
+@export var penetrate_damage_cof: float = 0.5 # 穿透伤害系数
+@export var penetrate_probability: float = 0.4 # 穿透触发概率
 
 #判断用
 
-var Is_Spawn_slime : bool = true
+var Is_Spawn_slime: bool = true
 
 
 func _ready() -> void:
@@ -36,23 +36,27 @@ func _ready() -> void:
 	$Mask.visible = false
 	Set_damage(1)
 	SignalBus.bullet_model = 0
+	
+	# 初始化敌人工厂实例
+	EnemyFactory.initialize_enemy_instances()
+	
 	#用于初始化信号链接
 	#sel专用连接区
-	SignalBus.Sel_Exp_obtain.connect(Callable(self,"Sel_Exp_obtain"))
-	SignalBus.Sel_Bullet_damage.connect(Callable(self,"Sel_Bullet_damage"))
-	SignalBus.Close_Choose_time.connect(Callable(self,"Close_Choose_time"))
-	SignalBus.Choose_time.connect(Callable(self,"sign_Is_Spawn_slime"))
-	SignalBus.Pause_game.connect(Callable(self,"on_pause_game"))
+	SignalBus.Sel_Exp_obtain.connect(Callable(self, "Sel_Exp_obtain"))
+	SignalBus.Sel_Bullet_damage.connect(Callable(self, "Sel_Bullet_damage"))
+	SignalBus.Close_Choose_time.connect(Callable(self, "Close_Choose_time"))
+	SignalBus.Choose_time.connect(Callable(self, "sign_Is_Spawn_slime"))
+	SignalBus.Pause_game.connect(Callable(self, "on_pause_game"))
 	
 	#explosion_chain相关信号连接
-	SignalBus.Sel_Explosion_Chain.connect(Callable(self,"sel_explosion_chain_apply"))
-	SignalBus.Sel_Explosion_Chain_Damage.connect(Callable(self,"sel_explosion_chain_damage_apply"))
-	SignalBus.Sel_Explosion_Chain_Probability.connect(Callable(self,"sel_explosion_chain_probability_apply"))
+	SignalBus.Sel_Explosion_Chain.connect(Callable(self, "sel_explosion_chain_apply"))
+	SignalBus.Sel_Explosion_Chain_Damage.connect(Callable(self, "sel_explosion_chain_damage_apply"))
+	SignalBus.Sel_Explosion_Chain_Probability.connect(Callable(self, "sel_explosion_chain_probability_apply"))
 	
 	#penetrate相关信号连接
-	SignalBus.Sel_Penetrate.connect(Callable(self,"sel_penetrate_apply"))
-	SignalBus.Sel_Penetrate_Damage_Cof.connect(Callable(self,"sel_penetrate_damage_cof_apply"))
-	SignalBus.Sel_Penetrate_Probability.connect(Callable(self,"sel_penetrate_probability_apply"))
+	SignalBus.Sel_Penetrate.connect(Callable(self, "sel_penetrate_apply"))
+	SignalBus.Sel_Penetrate_Damage_Cof.connect(Callable(self, "sel_penetrate_damage_cof_apply"))
+	SignalBus.Sel_Penetrate_Probability.connect(Callable(self, "sel_penetrate_probability_apply"))
 	
 	# 连接键盘管理器的信号
 	KeyboardManager.pause_requested.connect(_on_pause_requested)
@@ -66,23 +70,24 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	# 游戏暂停时不处理游戏逻辑
 	# 移除直接的ESC键检测，改为使用KeyboardManager的信号系统
-		
 	if Is_Spawn_slime:
-		Spawn_timer.wait_time -= 0.03 * delta #每秒减少0.03s的史莱姆生成时间
-		Spawn_timer.wait_time = clamp(Spawn_timer.wait_time,0.2,3) #将Spawn_timer.wait_time大小限制在1与3之间
+		Spawn_timer.wait_time -= 0.03 * delta # 每秒减少0.03s的史莱姆生成时间
+		Spawn_timer.wait_time = clamp(Spawn_timer.wait_time, 0.2, 3) # 将Spawn_timer.wait_time大小限制在1与3之间
 	
 	#文本更新
 	Score_label.text = "Score: " + str(Score)
-	Exp_label.text = "Exp:" + str(Exp) + "/" + str(ceil(10*(1.5**Level)))
+	Exp_label.text = "Exp:" + str(Exp) + "/" + str(ceil(10 * (1.5 ** Level)))
 	Level_label.text = "Level:" + str(Level)
 	
 	#经验等级更新
-	if Exp >= ceil(10*(1.5**Level)):
-		Exp=0
-		Level+=1
-		# SignalBus.Is_choose_time = true
-		if Level%10 == 0 or Level == 1:
-			Start_choose_time(2) #初始选卡
+	if Exp >= ceil(10 * (1.5 ** Level)):
+		Exp = 0
+		Level += 1
+		if Level >= 5:
+			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.SlimeGiant, true)
+
+		if Level % 10 == 0 or Level == 1:
+			Start_choose_time(2) # 初始选卡
 		else:
 			Start_choose_time()
 
@@ -91,17 +96,17 @@ func Spawn_slime():
 	if !Is_Spawn_slime:
 		return
 		#两边都有1/2的概率出兵
-	if randi()%2==0:
-		Spawn_enemy(Slime_scene,-345,32,112,1,1.1)		
+	if randi() % 2 == 0:
+		Spawn_enemy(EnemyFactory.get_random_enemy_by_weight(), -345, 32, 112, 1, 1.1)
 	else:
-		Spawn_enemy(Slime_scene,136,32,112,-1,1.1)		
+		Spawn_enemy(Slime_scene, 136, 32, 112, -1, 1.1)
 
-func Spawn_enemy(enemy_scene : PackedScene,position_x,range_1: int,range_2: int,enemy_face_derection: int,enemy_health_cof_base : float) -> void:
+func Spawn_enemy(enemy_scene: PackedScene, position_x, range_1: int, range_2: int, enemy_face_derection: int, enemy_health_cof_base: float) -> void:
 	var enemy_node = enemy_scene.instantiate()
 	# 先设置不会被子类初始化覆盖的属性
 	enemy_node.face_derection = enemy_face_derection
-	enemy_node.position = Vector2(position_x,randf_range(range_1,range_2))
-	enemy_node.Bullet_damage = Bullet_Damage
+	enemy_node.position = Vector2(position_x, randf_range(range_1, range_2))
+	# enemy_node.Bullet_damage = Bullet_Damage
 	enemy_node.Exp_coefficient = Exp_coefficient
 	
 	# 传递explosion_chain相关参数
@@ -119,13 +124,13 @@ func Spawn_enemy(enemy_scene : PackedScene,position_x,range_1: int,range_2: int,
 	get_tree().current_scene.add_child(enemy_node)
 
 	# 现在基于实例当前的 Health 值计算最终血量并应用
-	enemy_node.Health = comput_enemy_health(enemy_node.Health, enemy_health_cof_base) #设置血量
+	enemy_node.Health = comput_enemy_health(enemy_node.Health, enemy_health_cof_base) # 设置血量
 
 func show_game_over():
 	Game_over_label.visible = true
 
-func Start_choose_time(type: int = 1): #选项界面创建
-	$Mask.visible = true #蒙版可视性
+func Start_choose_time(type: int = 1): # 选项界面创建
+	$Mask.visible = true # 蒙版可视性
 	#全局信号
 	SignalBus.Choose_time.emit(true)
 	
@@ -136,18 +141,18 @@ func Start_choose_time(type: int = 1): #选项界面创建
 			Choose_Cards()
 		2:
 			Card_Selection_Label.text = "选择一个终极天赋"
-			Choose_Cards("ultimate",2) #初始选卡
+			Choose_Cards("ultimate", 2) # 初始选卡
 	
 	# 显示卡牌选择说明Label
 	Card_Selection_Label.visible = true
 
-func Close_Choose_time(): #选项界面关闭
+func Close_Choose_time(): # 选项界面关闭
 	$Mask.visible = false
 	Card_Selection_Label.visible = false
 	SignalBus.Choose_time.emit(false)
 
 # 新的牌包创建方法 - 使用新的牌包架构
-func Spawn_Card_New(Card_scene : PackedScene, position: Vector2, tag: String, type: int = 1): #对于Card创建
+func Spawn_Card_New(Card_scene: PackedScene, position: Vector2, tag: String, type: int = 1): # 对于Card创建
 	var Card_node = Card_scene.instantiate()
 	Card_node.position = position
 	var card
@@ -161,16 +166,19 @@ func Spawn_Card_New(Card_scene : PackedScene, position: Vector2, tag: String, ty
 	get_tree().current_scene.add_child(Card_node)
 	return card
 
-func Set_damage(Set_damage: float): #子弹伤害设置函数
+# 子弹伤害设置函数
+func Set_damage(Set_damage: float): 
 	Bullet_Damage = Set_damage
 	SignalBus.Get_bullet_damage.emit(Set_damage)
 
-func comput_enemy_health(enemy_init_health: float,cof_base: float): #血量成长函数
+# 子弹伤害设置函数
+func comput_enemy_health(enemy_init_health: float, cof_base: float): # 血量成长函数
 	# print("[debug][enemy] enemy health is:",enemy_init_health)
 	# print("[debug][player] player bullet damage is:",Bullet_Damage)
-	return enemy_init_health**(cof_base**Level)
+	return enemy_init_health ** (cof_base ** Level)
 
-func toggle_pause(): #暂停切换
+# 暂停切换
+func toggle_pause(): 
 	# 切换暂停状态
 	SignalBus.Is_paused = !SignalBus.Is_paused
 	SignalBus.Pause_game.emit(SignalBus.Is_paused)
@@ -188,29 +196,27 @@ func _on_resume_requested():
 		toggle_pause()
 		KeyboardManager.set_context(KeyboardManager.InputContext.GAMEPLAY)
 
-func Choose_Cards(tag: String = "",type: int = 1): #选项卡牌选择实现
-	
+func Choose_Cards(tag: String = "", type: int = 1): # 选项卡牌选择实现
 	var Card_1
 	if type == 1:
-		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55),"basic",2)
+		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55), "basic", 2)
 	else:
-		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55),tag,type)
-	Card_1.is_enabled = false 
-	var Card_2 = Spawn_Card_New(Choose_scene, Vector2(-117, 55),tag,type)
+		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55), tag, type)
+	Card_1.is_enabled = false
+	var Card_2 = Spawn_Card_New(Choose_scene, Vector2(-117, 55), tag, type)
 	Card_2.is_enabled = false
-	var Card_3 = Spawn_Card_New(Choose_scene, Vector2(42, 55),tag,type)
+	var Card_3 = Spawn_Card_New(Choose_scene, Vector2(42, 55), tag, type)
 	Card_1.is_enabled = true
 	Card_2.is_enabled = true
 
 # sel相关函数实现
-
 func Sel_Bullet_damage(cof):
-	Set_damage(Bullet_Damage*cof)
+	Set_damage(Bullet_Damage * cof)
 
 func Sel_Exp_obtain(cof):
-	Exp_coefficient*=cof
+	Exp_coefficient *= cof
 
-#explosion_chain相关处理函数
+# explosion_chain相关处理函数
 func sel_explosion_chain_apply():
 	# 启用爆炸连锁效果
 	print("[Game Manager] explosion_chain enabled")
@@ -220,18 +226,18 @@ func sel_explosion_chain_apply():
 	
 	Ultimate_exposion_chain += 1
 
-#explosion_chain伤害系数应用
+# explosion_chain伤害系数应用
 func sel_explosion_chain_damage_apply(cof: float):
 	explosion_chain_cof_damage *= cof
 
-#explosion_chain概率应用
+# explosion_chain概率应用
 func sel_explosion_chain_probability_apply(cof: float):
 	explosion_chain_cof_probability += cof
 	# 确保概率不超过1.0
 	explosion_chain_cof_probability = min(explosion_chain_cof_probability, 1.0)
 	print("[Game Manager] explosion_chain_probability updated to:", explosion_chain_cof_probability)
 
-#penetrate相关处理函数
+# penetrate相关处理函数
 func sel_penetrate_apply():
 	# 启用穿透效果
 	# print("[Game Manager] penetrate enabled")
@@ -241,12 +247,12 @@ func sel_penetrate_apply():
 
 	Ultimate_penetrate += 1
 
-#penetrate伤害系数应用
+# penetrate伤害系数应用
 func sel_penetrate_damage_cof_apply(cof: float):
 	penetrate_damage_cof *= cof
 	print("[Game Manager] penetrate_damage_cof updated to:", penetrate_damage_cof)
 
-#penetrate概率应用
+# penetrate概率应用
 func sel_penetrate_probability_apply(cof: float):
 	penetrate_probability += cof
 	# 确保概率不超过1.0
@@ -258,13 +264,14 @@ func sign_Is_Spawn_slime(Is_Choose_time):
 	Is_Spawn_slime = !Is_Choose_time
 	# print("debug_Is_Spawn_slime:",Is_Spawn_slime)
 
+# 暂停游戏
 func on_pause_game(is_paused: bool):
 	# 暂停时不修改Is_Spawn_slime状态，只处理暂停逻辑
 	pass
 
+# 屏幕抖动函数
 func screen_shake(strength: float = 5.0, duration: float = 0.3):
 	# 检查相机是否存在且具有start_shake方法（即使用了ScreenShake脚本）
 	if Camera and Camera.has_method("start_shake"):
 		# 调用相机的start_shake方法触发抖动效果
 		Camera.start_shake(strength, duration)
-	
