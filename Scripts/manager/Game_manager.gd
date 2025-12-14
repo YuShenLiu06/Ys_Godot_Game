@@ -1,5 +1,4 @@
 extends Node2D
-
 @export var Slime_scene: PackedScene
 @export var Spawn_timer: Timer
 @export var Score: int = 0
@@ -102,6 +101,8 @@ func Spawn_slime():
 		Spawn_enemy(Slime_scene, 136, 32, 112, -1, 1.1)
 
 func Spawn_enemy(enemy_scene: PackedScene, position_x, range_1: int, range_2: int, enemy_face_derection: int, enemy_health_cof_base: float) -> void:
+	if ! SceneManager.validate_scene(enemy_scene):
+		print("[Game Manager] 无效的敌人场景: ", enemy_scene)
 	var enemy_node = enemy_scene.instantiate()
 	# 先设置不会被子类初始化覆盖的属性
 	enemy_node.face_derection = enemy_face_derection
@@ -153,8 +154,15 @@ func Close_Choose_time(): # 选项界面关闭
 
 # 新的牌包创建方法 - 使用新的牌包架构
 func Spawn_Card_New(Card_scene: PackedScene, position: Vector2, tag: String, type: int = 1): # 对于Card创建
-	var Card_node = Card_scene.instantiate()
-	Card_node.position = position
+	# 使用Scene_manager安全实例化卡牌
+	var result = SceneManager.safe_instantiate_scene(Card_scene, null, position)
+	
+	# 检查实例化结果
+	if result[0] != SceneManager.SceneInstantiateResult.SUCCESS:
+		print("[Game Manager] 卡牌实例化失败: ", result[1])
+		return null
+	
+	var Card_node = result[1]
 	var card
 	# 使用新的随机初始化方法
 	match type:
@@ -163,7 +171,6 @@ func Spawn_Card_New(Card_scene: PackedScene, position: Vector2, tag: String, typ
 		2:
 			card = Card_node.initialize_by_tag(tag)
 	
-	get_tree().current_scene.add_child(Card_node)
 	return card
 
 # 子弹伤害设置函数

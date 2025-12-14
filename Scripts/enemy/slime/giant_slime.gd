@@ -9,6 +9,7 @@ func _init() -> void:
 	enemy_weight = 5
 	Exp = 15
 	is_enabled = false
+	lifetime = 50
 
 func get_health() -> float:
 	return Health

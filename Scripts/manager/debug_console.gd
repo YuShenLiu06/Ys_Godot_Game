@@ -359,10 +359,18 @@ func _cmd_spawn(args: Array[String]) -> void:
 	
 	# 调用游戏管理器的Spawn_enemy函数
 	var position = Vector2(x, y)
-	var enemy_node = enemy_scene.instantiate()
+	
+	# 使用SceneManager安全实例化敌人
+	var result = SceneManager.safe_instantiate_scene(enemy_scene, null, position)
+	
+	# 检查实例化结果
+	if result[0] != SceneManager.SceneInstantiateResult.SUCCESS:
+		_add_output("错误: 敌人实例化失败: " + result[1], Color.RED)
+		return
+	
+	var enemy_node = result[1]
 	
 	# 设置敌人基本属性
-	enemy_node.position = position
 	enemy_node.face_derection = 1  # 默认向右
 	enemy_node.Bullet_damage = game_manager.Bullet_Damage
 	enemy_node.Exp_coefficient = game_manager.Exp_coefficient
@@ -376,9 +384,6 @@ func _cmd_spawn(args: Array[String]) -> void:
 	enemy_node.penetrate_damage_cof = game_manager.penetrate_damage_cof
 	enemy_node.penetrate_probability = game_manager.penetrate_probability
 	enemy_node.Ultimate_penetrate = game_manager.Ultimate_penetrate
-	
-	# 将敌人添加到场景
-	get_tree().current_scene.add_child(enemy_node)
 	
 	# 计算并设置血量
 	var enemy_health_cof_base = 1.1  # 默认血量系数

@@ -22,9 +22,13 @@ func _on_pause_game_requested() -> void:
 	if current_pause_ui != null:
 		return # 已经显示暂停UI
 	
-	# 创建暂停UI实例
-	current_pause_ui = pause_ui_scene.instantiate()
-	ui_layer.add_child(current_pause_ui)
+	# 使用SceneManager安全创建暂停UI实例
+	var result = SceneManager.safe_instantiate_scene(pause_ui_scene, ui_layer)
+	if result[0] == SceneManager.SceneInstantiateResult.SUCCESS:
+		current_pause_ui = result[1]
+	else:
+		print("[UI Manager] 暂停UI实例化失败: ", result[1])
+		return
 	
 	# 暂停游戏
 	get_tree().paused = true
@@ -46,9 +50,13 @@ func _on_volume_control_requested() -> void:
 	if current_volume_ui != null:
 		return # 已经显示音量控制UI
 	
-	# 创建音量控制UI实例
-	current_volume_ui = volume_control_ui_scene.instantiate()
-	ui_layer.add_child(current_volume_ui)
+	# 使用SceneManager安全创建音量控制UI实例
+	var result = SceneManager.safe_instantiate_scene(volume_control_ui_scene, ui_layer)
+	if result[0] == SceneManager.SceneInstantiateResult.SUCCESS:
+		current_volume_ui = result[1]
+	else:
+		print("[UI Manager] 音量控制UI实例化失败: ", result[1])
+		return
 
 # 隐藏音量控制UI
 func hide_volume_control() -> void:
@@ -61,9 +69,13 @@ func hide_volume_control() -> void:
 
 # 通用UI显示方法
 func show_ui(ui_scene: PackedScene) -> Node:
-	var ui_instance = ui_scene.instantiate()
-	ui_layer.add_child(ui_instance)
-	return ui_instance
+	# 使用SceneManager安全创建UI实例
+	var result = SceneManager.safe_instantiate_scene(ui_scene, ui_layer)
+	if result[0] == SceneManager.SceneInstantiateResult.SUCCESS:
+		return result[1]
+	else:
+		print("[UI Manager] UI实例化失败: ", result[1])
+		return null
 
 # 通用UI隐藏方法
 func hide_ui(ui_instance: Node) -> void:
