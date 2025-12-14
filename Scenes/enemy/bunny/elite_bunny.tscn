@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dlg4m526u240d" path="res://Scenes/enemy/enemy.tscn" id="1_kxm2u"]
 [ext_resource type="Texture2D" uid="uid://dhaeliigayhpa" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-1.png" id="2_oq0ua"]
 [ext_resource type="Script" uid="uid://bdvnguvgedyq6" path="res://Scripts/enemy/bunny/elite_bunny.gd" id="2_uccb2"]
-[ext_resource type="PackedScene" uid="uid://3bvikdao82un" path="res://Scenes/enemy/bunny/normal_bunny.tscn" id="3_lr37b"]
+[ext_resource type="PackedScene" uid="uid://bdrnqqver1ojk" path="res://Scenes/enemy/bunny/elite_bunny_spawn_bunny.tscn" id="3_lr37b"]
 [ext_resource type="Texture2D" uid="uid://d06inbax08nyc" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-2.png" id="3_uccb2"]
 [ext_resource type="Texture2D" uid="uid://g0swr5msgcc4" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-3.png" id="4_lr37b"]
 [ext_resource type="Texture2D" uid="uid://do0tjtvxifpok" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-4.png" id="5_bx5f4"]
@@ -100,7 +100,7 @@ radius = 11.0
 [node name="enemy" instance=ExtResource("1_kxm2u")]
 scale = Vector2(2.5, 2.5)
 script = ExtResource("2_uccb2")
-normal_bunny_scene = ExtResource("3_lr37b")
+spawn_bunny_scene = ExtResource("3_lr37b")
 spawn_radius = 20.0
 wait_time_before_spawn = 1.0
 

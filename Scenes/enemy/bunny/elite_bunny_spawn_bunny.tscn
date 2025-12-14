@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdrnqqver1ojk"]
+
+[ext_resource type="Script" uid="uid://cv6nha546ewhn" path="res://Scripts/enemy/bunny/elite_bunny_spawn_bunny.gd" id="1_mfhde"]
+[ext_resource type="PackedScene" uid="uid://3bvikdao82un" path="res://Scenes/enemy/bunny/normal_bunny.tscn" id="2_kj0xv"]
+
+[node name="elite_bunny_spawn_bunny" type="Node2D" groups=["enemy"]]
+script = ExtResource("1_mfhde")
+normal_bunny_scene = ExtResource("2_kj0xv")
