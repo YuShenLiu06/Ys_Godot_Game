@@ -11,6 +11,11 @@ Build/
 .vscode/
 *.tmp
 
+# Development tool folders
+.github/
+.continue/
+.kilocode/
+
 # OS generated files
 .DS_Store
 .DS_Store?
