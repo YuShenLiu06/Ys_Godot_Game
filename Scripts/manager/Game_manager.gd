@@ -86,7 +86,7 @@ func _physics_process(delta: float) -> void:
 		if Level >= 5:
 			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.SlimeGiant, true)
 
-		if Level % 10 == 0 or Level == 1:
+		if Level % 10 == 0 or Level == 1: # 每升10级或1级时，给予选项2的选卡（初始）
 			Start_choose_time(2) # 初始选卡
 		else:
 			Start_choose_time()
