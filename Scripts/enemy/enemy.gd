@@ -118,18 +118,15 @@ func spawn_bullet_explosion(position: Vector2,damage: int = Bullet_damage):
 
 
 func _spawn_bullet_explosion_deferred(position: Vector2,damage: int):
-	# 使用SceneManager安全实例化爆炸效果
-	var result = SceneManager.safe_instantiate_scene(bullet_explosion_scene, null, position)
-	
-	# 检查实例化结果
-	if result[0] != SceneManager.SceneInstantiateResult.SUCCESS:
-		print("[Enemy] 爆炸效果实例化失败: ", result[1])
+	if ! SceneManager.validate_scene(bullet_explosion_scene):
+		print("[Enemy] 爆炸场景NULL")
 		return
-	
-	var bullet_explosion_instance = result[1]
+	var bullet_explosion_instance = bullet_explosion_scene.instantiate()
+	bullet_explosion_instance.position = position
 	# bullet_explosion_instance.explosion_scale = scale
 	bullet_explosion_instance.Bullet_damage = damage
 	bullet_explosion_instance.explosion_damage = explosion_damage
+	get_tree().current_scene.add_child(bullet_explosion_instance)
 
 func _on_area_entered_bullet(area: Area2D):
 	#处理触碰子弹事件

@@ -1,15 +1,13 @@
 extends Enemy_father
-class_name Giant_slime
+class_name Normal_bunny
 
 func _init() -> void:
 	# 子类特有的初始化（父类的 _ready 会在节点加入场景后调用 _init）
 	injured_wait_time = 0.5
-	Health = 10
-	Enemy_speed = 10
-	enemy_weight = 1
-	Exp = 15
-	is_enabled = false
-	lifetime = 50
+	Health = 1
+	Enemy_speed = 50
+	enemy_weight = 30
+	lifetime = 15
 
 func get_health() -> float:
 	return Health

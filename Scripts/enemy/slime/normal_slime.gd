@@ -6,6 +6,7 @@ func _init() -> void:
 	injured_wait_time = 0.5
 	Health = 1.5
 	Enemy_speed = 30
+	enemy_weight = 50
 
 func get_health() -> float:
 	return Health

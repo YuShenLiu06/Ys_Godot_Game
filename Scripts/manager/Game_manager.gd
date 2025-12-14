@@ -98,7 +98,7 @@ func Spawn_slime():
 	if randi() % 2 == 0:
 		Spawn_enemy(EnemyFactory.get_random_enemy_by_weight(), -345, 32, 112, 1, 1.1)
 	else:
-		Spawn_enemy(Slime_scene, 136, 32, 112, -1, 1.1)
+		Spawn_enemy(EnemyFactory.get_random_enemy_by_weight(), 136, 32, 112, -1, 1.1)
 
 func Spawn_enemy(enemy_scene: PackedScene, position_x, range_1: int, range_2: int, enemy_face_derection: int, enemy_health_cof_base: float) -> void:
 	if ! SceneManager.validate_scene(enemy_scene):

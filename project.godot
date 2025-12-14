@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="MyfirstGame"
+config/name="像素弹雨"
 run/main_scene="uid://bupskstlge2ex"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"

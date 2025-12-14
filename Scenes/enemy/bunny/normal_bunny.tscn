@@ -1,0 +1,115 @@
+[gd_scene load_steps=20 format=3 uid="uid://3bvikdao82un"]
+
+[ext_resource type="PackedScene" uid="uid://dlg4m526u240d" path="res://Scenes/enemy/enemy.tscn" id="1_nxonl"]
+[ext_resource type="Script" uid="uid://bqo4os3ms3dcl" path="res://Scripts/enemy/bunny/normal_bunny.gd" id="2_t6a0c"]
+[ext_resource type="Texture2D" uid="uid://dhaeliigayhpa" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-1.png" id="3_1qsit"]
+[ext_resource type="Texture2D" uid="uid://d06inbax08nyc" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-2.png" id="4_eqhfx"]
+[ext_resource type="Texture2D" uid="uid://g0swr5msgcc4" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-3.png" id="5_nqyot"]
+[ext_resource type="Texture2D" uid="uid://bmbdx44mabimv" path="res://AssetBundle/Assets/Characters/Enemies and NPC/bunny/bunny-sheet.png" id="5_qm6bu"]
+[ext_resource type="AudioStream" uid="uid://boe5wrwl4jmvf" path="res://AssetBundle/Audio/EnemyDeath.mp3" id="6_1qsit"]
+[ext_resource type="Texture2D" uid="uid://do0tjtvxifpok" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-4.png" id="6_qepwv"]
+[ext_resource type="Texture2D" uid="uid://d0obdm4ky4iyt" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-5.png" id="7_pimyw"]
+[ext_resource type="Texture2D" uid="uid://dgo3728o4o1cm" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-6.png" id="8_ehbip"]
+[ext_resource type="Texture2D" uid="uid://cup4h526oco76" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-7.png" id="9_hm7u3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t6a0c"]
+atlas = ExtResource("5_qm6bu")
+region = Rect2(0, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dh3sn"]
+atlas = ExtResource("5_qm6bu")
+region = Rect2(50, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t3mt5"]
+atlas = ExtResource("5_qm6bu")
+region = Rect2(100, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eqhfx"]
+atlas = ExtResource("5_qm6bu")
+region = Rect2(0, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nqyot"]
+atlas = ExtResource("5_qm6bu")
+region = Rect2(50, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qepwv"]
+atlas = ExtResource("5_qm6bu")
+region = Rect2(100, 0, 50, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pimyw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_1qsit")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_eqhfx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_nqyot")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_qepwv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_pimyw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ehbip")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_hm7u3")
+}],
+"loop": false,
+"name": &"Death",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t6a0c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dh3sn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t3mt5")
+}],
+"loop": true,
+"name": &"Injured",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eqhfx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nqyot")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qepwv")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ehbip"]
+radius = 11.0
+
+[node name="enemy" instance=ExtResource("1_nxonl")]
+script = ExtResource("2_t6a0c")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="0"]
+position = Vector2(-4.7683716e-07, -5)
+scale = Vector2(0.66666675, 0.6666667)
+sprite_frames = SubResource("SpriteFrames_pimyw")
+animation = &"Death"
+autoplay = "idle"
+frame = 6
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
+shape = SubResource("CircleShape2D_ehbip")
+
+[node name="Death_Sound" type="AudioStreamPlayer" parent="." index="2"]
+stream = ExtResource("6_1qsit")
