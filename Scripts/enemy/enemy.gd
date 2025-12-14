@@ -49,7 +49,9 @@ func _ready() -> void:
 	SignalBus.Choose_time.connect(Callable(self, "Clear_itself"))
 	SignalBus.Pause_game.connect(Callable(self, "on_pause_game"))
 
-# func _init() -> void:
+func _init() -> void:
+	# 父类初始化方法，确保子类可以正确继承
+	pass
 
 func Clear_itself(_is_choose_time: bool = false) -> void:
 	queue_free()

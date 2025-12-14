@@ -103,6 +103,7 @@ func Spawn_slime():
 func Spawn_enemy(enemy_scene: PackedScene, position_x, range_1: int, range_2: int, enemy_face_derection: int, enemy_health_cof_base: float) -> void:
 	if ! SceneManager.validate_scene(enemy_scene):
 		print("[Game Manager] 无效的敌人场景: ", enemy_scene)
+		return
 	var enemy_node = enemy_scene.instantiate()
 	# 先设置不会被子类初始化覆盖的属性
 	enemy_node.face_derection = enemy_face_derection
