@@ -49,14 +49,11 @@ func _ready() -> void:
 	SignalBus.Choose_time.connect(Callable(self, "Clear_itself"))
 	SignalBus.Pause_game.connect(Callable(self, "on_pause_game"))
 
-func _init() -> void:
-	# 父类初始化方法，确保子类可以正确继承
-	pass
-
 func Clear_itself(_is_choose_time: bool = false) -> void:
 	queue_free()
 
 func _physics_process(delta: float) -> void:
+	_process_dc(delta)
 	# 只在非暂停状态下累计时间
 	if not SignalBus.Is_paused:
 		game_time_elapsed += delta
@@ -170,9 +167,11 @@ func _on_area_entered_explosion(area: Area2D):
 	await get_tree().create_timer(1).timeout
 	is_explosion_chain = false
 
+# 当进入死亡区域
 
 func _on_area_entered_death_zone(area: Area2D) -> void:
 	$AnimatedSprite2D.play("Death")
+	_death()
 	is_dead = true
 	get_tree().current_scene.Score += 1
 	get_tree().current_scene.Exp += ceil(Exp * Exp_coefficient) # 获得经验*经验系数
@@ -204,3 +203,17 @@ func on_pause_game(is_paused: bool) -> void:
 # 判断是否处于激活状态
 func _is_enabled() -> bool:
 	return is_enabled
+
+# 父类初始化方法
+
+# 在死亡时候触发
+func _death() -> void:
+	pass 
+
+# 初始化方法
+func _init() -> void:
+	pass
+
+# 过程方法
+func _process_dc(delta: float) -> void:
+	pass

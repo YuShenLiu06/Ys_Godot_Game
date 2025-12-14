@@ -1,0 +1,118 @@
+[gd_scene load_steps=21 format=3 uid="uid://bnbcia46470i8"]
+
+[ext_resource type="PackedScene" uid="uid://dlg4m526u240d" path="res://Scenes/enemy/enemy.tscn" id="1_kxm2u"]
+[ext_resource type="Texture2D" uid="uid://dhaeliigayhpa" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-1.png" id="2_oq0ua"]
+[ext_resource type="Script" uid="uid://bdvnguvgedyq6" path="res://Scripts/enemy/bunny/elite_bunny.gd" id="2_uccb2"]
+[ext_resource type="PackedScene" uid="uid://3bvikdao82un" path="res://Scenes/enemy/bunny/normal_bunny.tscn" id="3_lr37b"]
+[ext_resource type="Texture2D" uid="uid://d06inbax08nyc" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-2.png" id="3_uccb2"]
+[ext_resource type="Texture2D" uid="uid://g0swr5msgcc4" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-3.png" id="4_lr37b"]
+[ext_resource type="Texture2D" uid="uid://do0tjtvxifpok" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-4.png" id="5_bx5f4"]
+[ext_resource type="Texture2D" uid="uid://d0obdm4ky4iyt" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-5.png" id="6_my18f"]
+[ext_resource type="Texture2D" uid="uid://dgo3728o4o1cm" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-6.png" id="7_p36tg"]
+[ext_resource type="Texture2D" uid="uid://cup4h526oco76" path="res://AssetBundle/Assets/Props Items and VFX/enemy-death/Sprites/enemy-death-7.png" id="8_y5n1w"]
+[ext_resource type="Texture2D" uid="uid://bmbdx44mabimv" path="res://AssetBundle/Assets/Characters/Enemies and NPC/bunny/bunny-sheet.png" id="9_yiyyk"]
+[ext_resource type="AudioStream" uid="uid://boe5wrwl4jmvf" path="res://AssetBundle/Audio/EnemyDeath.mp3" id="10_o1emq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t6a0c"]
+atlas = ExtResource("9_yiyyk")
+region = Rect2(0, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dh3sn"]
+atlas = ExtResource("9_yiyyk")
+region = Rect2(50, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t3mt5"]
+atlas = ExtResource("9_yiyyk")
+region = Rect2(100, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eqhfx"]
+atlas = ExtResource("9_yiyyk")
+region = Rect2(0, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nqyot"]
+atlas = ExtResource("9_yiyyk")
+region = Rect2(50, 0, 50, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qepwv"]
+atlas = ExtResource("9_yiyyk")
+region = Rect2(100, 0, 50, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0quwq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_oq0ua")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_uccb2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_lr37b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_bx5f4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_my18f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_p36tg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_y5n1w")
+}],
+"loop": false,
+"name": &"Death",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t6a0c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dh3sn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t3mt5")
+}],
+"loop": true,
+"name": &"Injured",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eqhfx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nqyot")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qepwv")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_al1nd"]
+radius = 11.0
+
+[node name="enemy" instance=ExtResource("1_kxm2u")]
+scale = Vector2(2.5, 2.5)
+script = ExtResource("2_uccb2")
+normal_bunny_scene = ExtResource("3_lr37b")
+spawn_radius = 20.0
+wait_time_before_spawn = 1.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." index="0"]
+position = Vector2(-4.7683716e-07, -5)
+scale = Vector2(0.66666675, 0.6666667)
+sprite_frames = SubResource("SpriteFrames_0quwq")
+animation = &"Death"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
+shape = SubResource("CircleShape2D_al1nd")
+
+[node name="Death_Sound" type="AudioStreamPlayer" parent="." index="2"]
+stream = ExtResource("10_o1emq")

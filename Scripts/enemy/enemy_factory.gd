@@ -10,12 +10,14 @@ enum EnemyType {
 	SlimeNormal = 1,
 	SlimeGiant = 2,
 	BunnyNormal = 3,
+	BunnyElif = 4,
 }
 
 static var _all_enemy_scenes: Array = [
 	preload("res://Scenes/enemy/slime/normal_slime.tscn"), # 1
 	preload("res://Scenes/enemy/slime/giant_slime.tscn"), # 2
 	preload("res://Scenes/enemy/bunny/normal_bunny.tscn"), # 3
+	preload("res://Scenes/enemy/bunny/elite_bunny.tscn"), # 4
 ]
 
 # 所有敌人实例的静态数组
