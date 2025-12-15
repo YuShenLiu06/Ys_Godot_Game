@@ -101,3 +101,22 @@ static func change_enemy_enabled_state(enemy_type: EnemyType, enabled: bool):
 		_all_enemy_instances[index].is_enabled = enabled
 	else:
 		push_error("无效的敌人类型: " + str(enemy_type))
+
+# 根据敌人类型返回权重
+static func get_enemy_weight(enemy_type: EnemyType) -> int:
+	# 敌人类型枚举值从1开始，数组索引从0开始，所以需要减1
+	var index = enemy_type - 1
+	if index >= 0 && index < _all_enemy_instances.size():
+		return _all_enemy_instances[index].enemy_weight
+	else:
+		push_error("无效的敌人类型: " + str(enemy_type))
+		return 0
+
+# 根据敌人类型更改权重
+static func change_enemy_weight(enemy_type: EnemyType, new_weight: int) -> void:
+	# 敌人类型枚举值从1开始，数组索引从0开始，所以需要减1
+	var index = enemy_type - 1
+	if index >= 0 && index < _all_enemy_instances.size():
+		_all_enemy_instances[index].enemy_weight = new_weight
+	else:
+		push_error("无效的敌人类型: " + str(enemy_type))

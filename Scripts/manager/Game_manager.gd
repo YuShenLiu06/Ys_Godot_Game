@@ -89,6 +89,10 @@ func _physics_process(delta: float) -> void:
 		if Level >= 5:
 			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.SlimeGiant, true)
 			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.BunnyElif, true)
+		if Level >= 10:
+			# if randi() % 2 == 0:
+				EnemyFactory.change_enemy_weight(EnemyFactory.EnemyType.SlimeGiant, EnemyFactory.get_enemy_weight(EnemyFactory.EnemyType.SlimeGiant) + 1)
+				EnemyFactory.change_enemy_weight(EnemyFactory.EnemyType.BunnyElif, EnemyFactory.get_enemy_weight(EnemyFactory.EnemyType.BunnyElif) + 1)
 		if Level == 13:
 			Start_choose_time(3) # 轮回选项
 		elif Level == 1: # 1级时给予选项2的选卡（初始）
