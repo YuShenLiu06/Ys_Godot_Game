@@ -8,7 +8,7 @@ class_name Elif_bunny
 func _init() -> void:
 	# 子类特有的初始化（父类的 _ready 会在节点加入场景后调用 _init）
 	injured_wait_time = 0.5
-	Health = 5
+	Health = 10
 	Enemy_speed = 30
 	enemy_weight = 1
 	Exp = 15

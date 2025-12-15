@@ -13,7 +13,7 @@ extends Node2D
 @export var Choose_scene: PackedScene
 @export var Exp_coefficient: float = 1.0 # 经验值获取系数
 @export var Camera: Camera2D # 引用相机节点，用于屏幕抖动效果
-@export var enemy_health_cof_base: float = 1.1 # 敌人血量系数
+@export var enemy_health_cof_base: float = 1.2 # 敌人血量系数
 
 #explosion_chain相关全局变量
 @export var Ultimate_exposion_chain: int = 0
@@ -166,8 +166,9 @@ func Start_choose_time(type: int = 1):
 			if Awaken_cards_count > 0:
 				Choose_Cards("Awaken", 2, clamp(Awaken_cards_count, 1, 3), false) # 觉醒
 			else:
-				Card_Selection_Label.text = "你已经添加了所有的觉醒"
-				Choose_Cards("AwakenEmpty", 3, 1, ) # 基础牌包
+				Card_Selection_Label.text = "你已经添加了所有的觉醒，改为普通强化"
+				Choose_Cards()
+				# Choose_Cards("AwakenEmpty", 3, 1, ) # 基础牌包
 			
 	# 显示卡牌选择说明Label
 	Card_Selection_Label.visible = true
@@ -208,11 +209,11 @@ func Set_damage(Set_damage: float):
 	Bullet_Damage = Set_damage
 	SignalBus.Get_bullet_damage.emit(Set_damage)
 
-# 子弹伤害设置函数
+# 敌人血量计算函数
 func comput_enemy_health(enemy_init_health: float, cof_base: float): # 血量成长函数
 	# print("[debug][enemy] enemy health is:",enemy_init_health)
 	# print("[debug][player] player bullet damage is:",Bullet_Damage)
-	return enemy_init_health ** (cof_base ** Level)
+	return enemy_init_health * (cof_base ** Level)
 
 # 暂停切换
 func toggle_pause():
