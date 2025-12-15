@@ -179,15 +179,15 @@ MyfirstGame/
 ## 📚 文档资源
 
 ### 游戏Wiki
-- **[游戏Wiki首页](docs/wiki/README.md)** - 完整的游戏文档索引
-- **[游戏概述](docs/wiki/game-overview.md)** - 游戏简介和核心玩法
-- **[卡牌系统概述](docs/wiki/card-system-overview.md)** - 卡牌系统详解
-- **[终极天赋系统](docs/wiki/ultimate-talents.md)** - 终极天赋详解
+- **[游戏Wiki首页](Docs/wiki/README.md)** - 完整的游戏文档索引
+- **[游戏概述](Docs/wiki/game-overview.md)** - 游戏简介和核心玩法
+- **[卡牌系统概述](Docs/wiki/card-system-overview.md)** - 卡牌系统详解
+- **[终极天赋系统](Docs/wiki/ultimate-talents.md)** - 终极天赋详解
 
 ### 开发文档
-- **[玩家指南](docs/PlayerGuide.md)** - 详细的游戏机制、数值和策略指南
-- **[卡牌系统文档](docs/卡牌系统文档.md)** - 开发者技术文档
-- **[调试控制台说明](docs/调试控制台使用说明.md)** - 调试工具使用指南
+- **[玩家指南](Docs/PlayerGuide.md)** - 详细的游戏机制、数值和策略指南
+- **[卡牌系统文档](Docs/卡牌系统文档.md)** - 开发者技术文档
+- **[调试控制台说明](Docs/调试控制台使用说明.md)** - 调试工具使用指南
 
 ## 🎮 游戏策略
 

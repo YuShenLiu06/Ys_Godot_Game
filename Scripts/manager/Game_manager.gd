@@ -218,6 +218,7 @@ func _on_resume_requested():
 		toggle_pause()
 		KeyboardManager.set_context(KeyboardManager.InputContext.GAMEPLAY)
 
+# 选项卡牌选择实现
 func Choose_Cards(tag: String = "", type: int = 1, card_count: int = 3, base_position: Vector2 = Vector2(-117, 55), spacing: float = 159.0): # 选项卡牌选择实现
 # type = 1: 随机牌包（根据启用标签）
 	# 计算卡牌位置分布
@@ -242,8 +243,8 @@ func Choose_Cards(tag: String = "", type: int = 1, card_count: int = 3, base_pos
 		cards.append(card)
 	
 	# 启用前两张卡牌（如果存在）
-	for i in range(min(2, cards.size())):
-		cards[i].is_enabled = true
+	for i in cards:
+		i.is_enabled = true
 	
 	return cards
 

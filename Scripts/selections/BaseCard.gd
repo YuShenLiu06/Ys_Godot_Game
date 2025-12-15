@@ -9,7 +9,7 @@ var description: String = "Base Card Description"
 var icon_path: String = ""
 
 # 牌包标签 - 单一字符串，代表牌包分组（如"basic"、"expansion1"、"expansion2"等）
-var card_tag: String = "basic"  # 默认为基础牌包
+var card_tag: String = "basic_card"  # 默认为基础牌包
 var is_enabled: bool = true
 
 # 虚函数 - 子类必须实现
