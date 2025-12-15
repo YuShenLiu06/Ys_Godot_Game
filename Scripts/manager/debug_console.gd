@@ -176,7 +176,7 @@ func _cmd_help(args: Array[String]) -> void:
 	_add_output("ultimate <type> add <amount> - 增加终极技能次数", Color.WHITE)
 	_add_output("  type: tracking_bullet, explosion_chain, penetrate", Color.GRAY)
 	_add_output("choose <type> - 触发选卡界面", Color.WHITE)
-	_add_output("  type: 1 (普通强化), 2 (终极天赋)", Color.GRAY)
+	_add_output("  type: 1 (普通强化), 2 (终极天赋), 3 (轮回)", Color.GRAY)
 	_add_output("spawn <tscn> <x> <y> - 在指定位置生成敌人", Color.WHITE)
 	_add_output("  tscn: normal_slime, test_enemy", Color.GRAY)
 	_add_output("  x, y: 生成位置的坐标", Color.GRAY)
@@ -300,12 +300,12 @@ func _cmd_ultimate(args: Array[String]) -> void:
 func _cmd_choose(args: Array[String]) -> void:
 	if args.size() < 2:
 		_add_output("用法: /choose <type>", Color.RED)
-		_add_output("type: 1 (普通强化), 2 (终极天赋)", Color.YELLOW)
+		_add_output("type: 1 (普通强化), 2 (终极天赋), 3 (轮回)", Color.YELLOW)
 		return
 	
 	var choose_type = args[1].to_int()
-	if choose_type < 1 or choose_type > 2:
-		_add_output("选卡类型必须是 1 或 2", Color.RED)
+	if choose_type < 1 or choose_type > 3:
+		_add_output("选卡类型必须是 1、2 或 3", Color.RED)
 		return
 	
 	if not game_manager:
@@ -315,7 +315,15 @@ func _cmd_choose(args: Array[String]) -> void:
 	# 调用游戏管理器的Start_choose_time函数
 	game_manager.Start_choose_time(choose_type)
 	
-	var type_name = "普通强化" if choose_type == 1 else "终极天赋"
+	var type_name = ""
+	match choose_type:
+		1:
+			type_name = "普通强化"
+		2:
+			type_name = "终极天赋"
+		3:
+			type_name = "轮回"
+	
 	_add_output("已触发" + type_name + "选卡界面", Color.GREEN)
 
 func _cmd_spawn(args: Array[String]) -> void:

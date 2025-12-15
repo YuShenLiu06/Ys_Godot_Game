@@ -29,7 +29,7 @@ extends Node2D
 
 var Is_Spawn_slime: bool = true
 
-
+# 游戏初始化
 func _ready() -> void:
 	# ConfigManager.load_config()
 	$Mask.visible = false
@@ -60,12 +60,16 @@ func _ready() -> void:
 	# 连接键盘管理器的信号
 	KeyboardManager.pause_requested.connect(_on_pause_requested)
 	KeyboardManager.resume_requested.connect(_on_resume_requested)
+
+	# sel_rein相关信号连接
+	SignalBus.Sel_Rein.connect(Callable(self, "sel_init"))
 	
 	# 确保相机引用正确
 	# 如果在编辑器中没有手动设置相机引用，则自动查找子节点中的Camera2D
 	if Camera == null:
 		Camera = $Camera2D
 
+# 游戏主循环
 func _physics_process(delta: float) -> void:
 	# 游戏暂停时不处理游戏逻辑
 	# 移除直接的ESC键检测，改为使用KeyboardManager的信号系统
@@ -85,12 +89,14 @@ func _physics_process(delta: float) -> void:
 		if Level >= 5:
 			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.SlimeGiant, true)
 			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.BunnyElif, true)
-
-		if Level % 10 == 0 or Level == 1: # 每升10级或1级时，给予选项2的选卡（初始）
+		if Level == 10:
+			Start_choose_time(3) # 轮回选项
+		elif Level == 1: # 1级时给予选项2的选卡（初始）
 			Start_choose_time(2) # 初始选卡
 		else:
 			Start_choose_time()
 
+# 史莱姆生成函数
 func Spawn_slime():
 	# print("[debug][gm] Spawn_slime:",Is_Spawn_slime)
 	if !Is_Spawn_slime:
@@ -101,8 +107,9 @@ func Spawn_slime():
 	else:
 		Spawn_enemy(EnemyFactory.get_random_enemy_by_weight(), 136, 32, 112, -1, 1.1)
 
+# 敌人生成函数
 func Spawn_enemy(enemy_scene: PackedScene, position_x, range_1: int, range_2: int, enemy_face_derection: int, enemy_health_cof_base: float) -> void:
-	if ! SceneManager.validate_scene(enemy_scene):
+	if !SceneManager.validate_scene(enemy_scene):
 		print("[Game Manager] 无效的敌人场景: ", enemy_scene)
 		return
 	var enemy_node = enemy_scene.instantiate()
@@ -129,10 +136,12 @@ func Spawn_enemy(enemy_scene: PackedScene, position_x, range_1: int, range_2: in
 	# 现在基于实例当前的 Health 值计算最终血量并应用
 	enemy_node.Health = comput_enemy_health(enemy_node.Health, enemy_health_cof_base) # 设置血量
 
+# 游戏结束显示
 func show_game_over():
 	Game_over_label.visible = true
 
-func Start_choose_time(type: int = 1): # 选项界面创建
+# 选项界面创建
+func Start_choose_time(type: int = 1): 
 	$Mask.visible = true # 蒙版可视性
 	#全局信号
 	SignalBus.Choose_time.emit(true)
@@ -145,17 +154,21 @@ func Start_choose_time(type: int = 1): # 选项界面创建
 		2:
 			Card_Selection_Label.text = "选择一个终极天赋"
 			Choose_Cards("ultimate", 2) # 初始选卡
-	
+		3:
+			Card_Selection_Label.text = "选择一个轮回选项"
+			Choose_Cards("Rein", 2, 2) # 轮回选项
 	# 显示卡牌选择说明Label
 	Card_Selection_Label.visible = true
 
-func Close_Choose_time(): # 选项界面关闭
+# 选项界面关闭
+func Close_Choose_time(): 
 	$Mask.visible = false
 	Card_Selection_Label.visible = false
 	SignalBus.Choose_time.emit(false)
 
 # 新的牌包创建方法 - 使用新的牌包架构
 func Spawn_Card_New(Card_scene: PackedScene, position: Vector2, tag: String, type: int = 1): # 对于Card创建
+	# type = 1: 随机牌包（根据启用标签）
 	# 使用Scene_manager安全实例化卡牌
 	var result = SceneManager.safe_instantiate_scene(Card_scene, null, position)
 	
@@ -176,7 +189,7 @@ func Spawn_Card_New(Card_scene: PackedScene, position: Vector2, tag: String, typ
 	return card
 
 # 子弹伤害设置函数
-func Set_damage(Set_damage: float): 
+func Set_damage(Set_damage: float):
 	Bullet_Damage = Set_damage
 	SignalBus.Get_bullet_damage.emit(Set_damage)
 
@@ -187,7 +200,7 @@ func comput_enemy_health(enemy_init_health: float, cof_base: float): # 血量成
 	return enemy_init_health ** (cof_base ** Level)
 
 # 暂停切换
-func toggle_pause(): 
+func toggle_pause():
 	# 切换暂停状态
 	SignalBus.Is_paused = !SignalBus.Is_paused
 	SignalBus.Pause_game.emit(SignalBus.Is_paused)
@@ -205,23 +218,53 @@ func _on_resume_requested():
 		toggle_pause()
 		KeyboardManager.set_context(KeyboardManager.InputContext.GAMEPLAY)
 
-func Choose_Cards(tag: String = "", type: int = 1): # 选项卡牌选择实现
-	var Card_1
-	if type == 1:
-		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55), "basic", 2)
-	else:
-		Card_1 = Spawn_Card_New(Choose_scene, Vector2(-276, 55), tag, type)
-	Card_1.is_enabled = false
-	var Card_2 = Spawn_Card_New(Choose_scene, Vector2(-117, 55), tag, type)
-	Card_2.is_enabled = false
-	var Card_3 = Spawn_Card_New(Choose_scene, Vector2(42, 55), tag, type)
-	Card_1.is_enabled = true
-	Card_2.is_enabled = true
+func Choose_Cards(tag: String = "", type: int = 1, card_count: int = 3, base_position: Vector2 = Vector2(-117, 55), spacing: float = 159.0): # 选项卡牌选择实现
+# type = 1: 随机牌包（根据启用标签）
+	# 计算卡牌位置分布
+	var cards = []
+	var total_width = (card_count - 1) * spacing
+	var start_x = base_position.x - total_width / 2
+	
+	# 创建指定数量的卡牌
+	for i in range(card_count):
+		var card_x = start_x + i * spacing
+		var card_pos = Vector2(card_x, base_position.y)
+		
+		var card
+		# 第一张卡牌特殊处理（当type=1时）
+		if i == 0 and type == 1:
+			card = Spawn_Card_New(Choose_scene, card_pos, "basic", 2)
+		else:
+			card = Spawn_Card_New(Choose_scene, card_pos, tag, type)
+		
+		# 设置卡牌启用状态，防止重复
+		card.is_enabled = false
+		cards.append(card)
+	
+	# 启用前两张卡牌（如果存在）
+	for i in range(min(2, cards.size())):
+		cards[i].is_enabled = true
+	
+	return cards
 
 # sel相关函数实现
+func sel_init() -> void:
+	print("[Game Manager] sel_init called")
+	# 初始化sel相关属性
+	Exp_coefficient = 1.0
+	explosion_chain_cof_damage = 0.5
+	explosion_chain_cof_probability = 0.4
+	penetrate_damage_cof = 0.5
+	penetrate_probability = 0.4
+	Set_damage(1)
+	Spawn_timer.wait_time = 3.0
+	Level = 0
+
+# Bullet_damage应用
 func Sel_Bullet_damage(cof):
 	Set_damage(Bullet_Damage * cof)
 
+# Exp获取系数应用
 func Sel_Exp_obtain(cof):
 	Exp_coefficient *= cof
 

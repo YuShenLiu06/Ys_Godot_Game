@@ -37,6 +37,9 @@ func _ready() -> void: #游戏开始时被运行
 	SignalBus.Pause_game.connect(Callable(self,"sign_Is_processing"))
 	SignalBus.Sel_Tracking_Bullet.connect(Callable(self,"sel_tracking_bullet_apply"))
 
+	# sel_rein相关信号连接
+	SignalBus.Sel_Rein.connect(Callable(self, "Sel_init"))
+
 	velocity = Vector2(50,0) #(x,y)
 	
 func _process(delta: float) -> void:
@@ -134,6 +137,14 @@ func Sel_Bullet_fire_timer(cof):
 	$Timer.wait_time*=cof
 func Get_bullet_damage(damage):
 	bullet_damage = damage
+
+#init 函数
+
+func Sel_init() -> void:
+	# 初始化sel相关属性
+	tracking_bullet_turn_speed_multiplier = 0.5  # 转向速度倍数
+	tracking_bullet_max_lifetime_bonus = 0.0  # 最大生存时间加成
+	$Timer.wait_time = 1  # 子弹发射间隔
 
 
 # ultimate相关函数实现
