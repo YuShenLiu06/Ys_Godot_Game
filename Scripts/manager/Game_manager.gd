@@ -285,7 +285,8 @@ func sel_init() -> void:
 	Level = 0
 	EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.SlimeGiant, false)
 	EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.BunnyElif, false)
-
+	EnemyFactory.change_enemy_weight(EnemyFactory.EnemyType.SlimeGiant, 1)
+	EnemyFactory.change_enemy_weight(EnemyFactory.EnemyType.BunnyElif, 1)
 # Bullet_damage应用
 func Sel_Bullet_damage(cof):
 	Set_damage(Bullet_Damage * cof)
