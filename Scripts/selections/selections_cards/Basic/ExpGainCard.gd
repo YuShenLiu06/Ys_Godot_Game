@@ -17,6 +17,7 @@ func initialize() -> void:
 	# 初始化牌包，可以在这里设置随机系数等
 	exp_coefficient = 2.0
 	description = "经验获取*" + str(exp_coefficient)
+	is_enabled = false
 
 func apply_effect() -> void:
 	# 应用经验获取提升效果
@@ -38,3 +39,6 @@ func on_before_apply() -> void:
 func on_after_apply() -> void:
 	# 应用后的效果，如播放特效等
 	pass
+func Close_Choose_time() -> void:
+	# 关闭选择界面时的处理（如果需要）
+	is_enabled = true

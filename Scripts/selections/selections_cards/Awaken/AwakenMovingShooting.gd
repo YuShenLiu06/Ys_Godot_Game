@@ -1,32 +1,30 @@
-class_name PenetrateProbabilityCard
+# 移动射击觉醒卡包
+class_name AwakenMovingShooting
 extends BaseCard
 
-var probability_coefficient: float = 0.05
+var is_use : bool = false
 
 func _init():
-	card_name = "穿透概率强化"
-	description = "提升穿透触发概率"
+	card_name = "移动射击觉醒"
+	description = "移动射击"
 	icon_path = ""
 	
 	# 设置标签
-	card_tag = "penetrate"  # 穿透牌包
+	card_tag = "Awaken"  # 觉醒牌包
 
 func initialize() -> void:
-	# 初始化牌包，设置随机系数
-	description = "穿透概率+" + str(probability_coefficient)
-	# 存储概率提升值供apply_effect使用
-	card_tag = "penetrate"  # 穿透牌包
+	# 初始化牌包，可以在这里设置随机系数等
+	description = "移动射击"
 	is_enabled = false
 
-# 存储概率提升值
-
 func apply_effect() -> void:
-	# 应用穿透概率提升效果
+	# 应用移动射击效果
 	on_before_apply()
 	
+	# 发送信号到玩家
+	SignalBus.Sel_Moving_Shooting.emit()
+	is_use = true
 	# 发送信号到游戏管理器
-	SignalBus.Sel_Penetrate_Probability.emit(probability_coefficient)
-
 	on_after_apply()
 
 func can_apply() -> bool:
@@ -42,4 +40,5 @@ func on_after_apply() -> void:
 	pass
 func Close_Choose_time() -> void:
 	# 关闭选择界面时的处理（如果需要）
-	is_enabled = true
+	if !is_use:
+		is_enabled = true

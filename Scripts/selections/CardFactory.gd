@@ -19,9 +19,12 @@ static var _all_cards_cache: Array[BaseCard] = [
 	PenetrateProbabilityCard.new(),
 	ReinTrue.new(),
 	ReinFalse.new(),
+	AwakenTripleShot.new(),
+	AwakenMovingShooting.new(),
+	AwakenEmpty.new(),
 ]
 # 启用的标签列表 - 可以在运行时设置
-static var enabled_tags: Array[String] = ["basic"]  # 默认启用基础牌包和追踪子弹牌包
+static var enabled_tags: Array[String] = ["basic"]  # 默认启用基础牌包
 
 # 设置启用的标签
 static func set_enabled_tags(tags: Array[String]) -> void:
@@ -130,3 +133,25 @@ static func create_random_card_by_enable_tag() ->BaseCard:
 	else:
 		push_error("没有可用的牌包")
 		return BaseCard.new()
+
+# 返回某一标签的所有启用牌包
+static func get_enabled_cards_by_tag(tag: String) -> Array[BaseCard]:
+	# print("[CardFactory] 获取启用标签 '" + tag + "' 的牌包")
+	var enabled_cards_by_tag: Array[BaseCard] = []
+	var all_enabled_cards = get_all_cards()
+	
+	for card in all_enabled_cards:
+		# print("[CardFactory] 检查牌包: " + card.get_card_name() + "，标签: " + card.get_tag())
+		if card.has_tag(tag) and card.is_enabled:
+			enabled_cards_by_tag.append(card)
+	
+	return enabled_cards_by_tag
+
+# 根据card_name来返回牌包
+static func get_card_by_name(card_name: String) -> BaseCard:
+	var all_cards = get_all_cards()
+	for card in all_cards:
+		if card.get_card_name() == card_name:
+			return card
+	push_error("未找到名称为 '" + card_name + "' 的牌包")
+	return BaseCard.new()

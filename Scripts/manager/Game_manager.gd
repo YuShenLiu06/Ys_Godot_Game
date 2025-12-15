@@ -89,10 +89,12 @@ func _physics_process(delta: float) -> void:
 		if Level >= 5:
 			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.SlimeGiant, true)
 			EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.BunnyElif, true)
-		if Level == 10:
+		if Level == 13:
 			Start_choose_time(3) # 轮回选项
 		elif Level == 1: # 1级时给予选项2的选卡（初始）
 			Start_choose_time(2) # 初始选卡
+		elif Level == 10:
+			Start_choose_time(4) # 觉醒
 		else:
 			Start_choose_time()
 
@@ -141,7 +143,7 @@ func show_game_over():
 	Game_over_label.visible = true
 
 # 选项界面创建
-func Start_choose_time(type: int = 1): 
+func Start_choose_time(type: int = 1):
 	$Mask.visible = true # 蒙版可视性
 	#全局信号
 	SignalBus.Choose_time.emit(true)
@@ -157,11 +159,21 @@ func Start_choose_time(type: int = 1):
 		3:
 			Card_Selection_Label.text = "选择一个轮回选项"
 			Choose_Cards("Rein", 2, 2) # 轮回选项
+		4:
+			Card_Selection_Label.text = "选择一个觉醒"
+			var Awaken_cards_count: int = CardFactory.get_enabled_cards_by_tag("Awaken").size()
+			print("[Game Manager] Awaken_cards_count:", CardFactory.get_enabled_cards_by_tag("Awaken"))
+			if Awaken_cards_count > 0:
+				Choose_Cards("Awaken", 2, clamp(Awaken_cards_count, 1, 3), false) # 觉醒
+			else:
+				Card_Selection_Label.text = "你已经添加了所有的觉醒"
+				Choose_Cards("AwakenEmpty", 3, 1, ) # 基础牌包
+			
 	# 显示卡牌选择说明Label
 	Card_Selection_Label.visible = true
 
 # 选项界面关闭
-func Close_Choose_time(): 
+func Close_Choose_time():
 	$Mask.visible = false
 	Card_Selection_Label.visible = false
 	SignalBus.Choose_time.emit(false)
@@ -185,6 +197,9 @@ func Spawn_Card_New(Card_scene: PackedScene, position: Vector2, tag: String, typ
 			card = Card_node.initialize_random_by_enable_tag()
 		2:
 			card = Card_node.initialize_by_tag(tag)
+		3:
+			# 通过名称初始化牌包
+			card = Card_node.initialize_by_name(tag)
 	
 	return card
 
@@ -219,8 +234,9 @@ func _on_resume_requested():
 		KeyboardManager.set_context(KeyboardManager.InputContext.GAMEPLAY)
 
 # 选项卡牌选择实现
-func Choose_Cards(tag: String = "", type: int = 1, card_count: int = 3, base_position: Vector2 = Vector2(-117, 55), spacing: float = 159.0): # 选项卡牌选择实现
+func Choose_Cards(tag: String = "", type: int = 1, card_count: int = 3, is_enabled_car_repaet: bool = true, base_position: Vector2 = Vector2(-117, 55), spacing: float = 159.0): # 选项卡牌选择实现
 # type = 1: 随机牌包（根据启用标签）
+# is_enabled_car_repaet: 是否启用重复卡牌选择
 	# 计算卡牌位置分布
 	var cards = []
 	var total_width = (card_count - 1) * spacing
@@ -239,16 +255,18 @@ func Choose_Cards(tag: String = "", type: int = 1, card_count: int = 3, base_pos
 			card = Spawn_Card_New(Choose_scene, card_pos, tag, type)
 		
 		# 设置卡牌启用状态，防止重复
-		card.is_enabled = false
-		cards.append(card)
+		# card.is_enabled = false
+		# cards.append(card)
 	
 	# 启用前两张卡牌（如果存在）
-	for i in cards:
-		i.is_enabled = true
-	
+	# if is_enabled_car_repaet:
+	# 	for i in cards:
+	# 		i.is_enabled = true
 	return cards
 
 # sel相关函数实现
+
+# sel_init函数轮回-初始化
 func sel_init() -> void:
 	print("[Game Manager] sel_init called")
 	# 初始化sel相关属性
@@ -260,6 +278,8 @@ func sel_init() -> void:
 	Set_damage(1)
 	Spawn_timer.wait_time = 3.0
 	Level = 0
+	EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.SlimeGiant, false)
+	EnemyFactory.change_enemy_enabled_state(EnemyFactory.EnemyType.BunnyElif, false)
 
 # Bullet_damage应用
 func Sel_Bullet_damage(cof):

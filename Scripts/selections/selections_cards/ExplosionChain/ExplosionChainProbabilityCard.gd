@@ -16,6 +16,7 @@ func _init():
 func initialize() -> void:
 	# 初始化牌包，可以在这里设置随机增加值等
 	description = "爆炸连锁概率+" + str(probability_increase)
+	is_enabled = false
 
 func apply_effect() -> void:
 	# 应用概率提升效果
@@ -37,3 +38,6 @@ func on_before_apply() -> void:
 func on_after_apply() -> void:
 	# 应用后的效果，如播放特效等
 	pass
+func Close_Choose_time() -> void:
+	# 关闭选择界面时的处理（如果需要）
+	is_enabled = true

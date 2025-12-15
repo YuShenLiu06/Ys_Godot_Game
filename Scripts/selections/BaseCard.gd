@@ -9,8 +9,13 @@ var description: String = "Base Card Description"
 var icon_path: String = ""
 
 # 牌包标签 - 单一字符串，代表牌包分组（如"basic"、"expansion1"、"expansion2"等）
-var card_tag: String = "basic_card"  # 默认为基础牌包
+var card_tag: String = "basic_card"  # 默认标签
 var is_enabled: bool = true
+
+
+# func _ready() -> void:
+# 	# 连接信号（如果需要）
+# 	SignalBus.Close_Choose_time.connect(Callable(self, "Close_Choose_time"))
 
 # 虚函数 - 子类必须实现
 # 初始化牌包
@@ -61,3 +66,7 @@ func set_enabled(enabled: bool) -> void:
 # 检查牌包标签是否在指定的标签列表中
 func is_tag_in_list(tags: Array[String]) -> bool:
 	return card_tag in tags
+
+func Close_Choose_time() -> void:
+	# 关闭选择界面时的处理（如果需要）
+	pass

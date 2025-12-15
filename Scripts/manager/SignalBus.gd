@@ -42,3 +42,7 @@ signal Sel_Penetrate_Probability(cof : float) #穿透概率
 
 #sel_rein系列实现
 signal Sel_Rein()
+
+#awaken系列实现
+signal Sel_Triple_Shot() #三连发觉醒
+signal Sel_Moving_Shooting() #移动射击觉醒

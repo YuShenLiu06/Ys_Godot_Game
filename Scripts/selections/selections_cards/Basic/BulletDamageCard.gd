@@ -14,6 +14,8 @@ func _init():
 	card_tag = "basic"  # 基础牌包
 
 func initialize() -> void:
+	is_enabled = false
+
 	# 初始化牌包，可以在这里设置随机系数等
 	damage_coefficient = 1.5
 	description = "子弹伤害*" + str(damage_coefficient)
@@ -38,3 +40,6 @@ func on_before_apply() -> void:
 func on_after_apply() -> void:
 	# 应用后的效果，如播放特效等
 	pass
+func Close_Choose_time() -> void:
+	# 关闭选择界面时的处理（如果需要）
+	is_enabled = true

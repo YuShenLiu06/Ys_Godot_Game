@@ -16,6 +16,7 @@ func initialize() -> void:
 	description = "穿透伤害系数*" + str(damage_coefficient) + "倍"
 	# 存储系数供apply_effect使用
 	card_tag = "penetrate"  # 穿透牌包
+	is_enabled = false
 
 
 func apply_effect() -> void:
@@ -38,3 +39,6 @@ func on_before_apply() -> void:
 func on_after_apply() -> void:
 	# 应用后的效果，如播放特效等
 	pass
+func Close_Choose_time() -> void:
+	# 关闭选择界面时的处理（如果需要）
+	is_enabled = true

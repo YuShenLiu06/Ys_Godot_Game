@@ -17,6 +17,14 @@ var tracking_bullet_max_lifetime_bonus: float = 0.0  # 最大生存时间加成
 @export var Ultimate_tracking_bullet : int = 0
 @export var Ultimate_exposion_chain : int = 0
 
+# 三连发相关变量
+var is_triple_shot_enabled: bool = false  # 是否启用三连发
+var triple_shot_count: int = 0  # 当前三连发计数
+var triple_shot_interval: float = 0.1  # 三连发子弹间隔时间
+
+# 移动射击相关变量
+var is_moving_shooting : bool = false
+
 #sign 判断用
 
 var Is_processing : bool = true
@@ -39,8 +47,15 @@ func _ready() -> void: #游戏开始时被运行
 
 	# sel_rein相关信号连接
 	SignalBus.Sel_Rein.connect(Callable(self, "Sel_init"))
+	
+	# 三连发觉醒信号连接
+	SignalBus.Sel_Triple_Shot.connect(Callable(self, "sel_triple_shot_apply"))
+	
+	# 移动射击觉醒信号连接
+	SignalBus.Sel_Moving_Shooting.connect(Callable(self, "sel_moving_shooting_apply"))
 
 	velocity = Vector2(50,0) #(x,y)
+	$Timer.wait_time=1
 	
 func _process(delta: float) -> void:
 	# 检测ESC键暂停游戏
@@ -88,12 +103,19 @@ func Gameover():
 
 func _on_fire() -> void: #根据Timer信号
 	
-	if velocity != Vector2.ZERO || Is_Game_Over || !Is_on_fire:
+	if !(velocity == Vector2.ZERO || is_moving_shooting) || Is_Game_Over || !Is_on_fire:
 		return
-	
-	$Fire_Sound.play()
-	
+		
+	# 如果启用了三连发，则发射三发子弹
+	if is_triple_shot_enabled:
+		fire_triple_shot()
+	else:
+		fire_single_bullet()
+
+# 发射单发子弹
+func fire_single_bullet():
 	# 根据设置选择子弹类型
+	$Fire_Sound.play()
 	var bullet_node
 	match SignalBus.bullet_model:
 		SignalBus.bullet_models.tracking_bullet:
@@ -122,10 +144,15 @@ func _on_fire() -> void: #根据Timer信号
 	
 	bullet_node.position = position
 	get_tree().current_scene.add_child(bullet_node)
-	
-	
 
-
+# 发射三连发子弹
+func fire_triple_shot():
+	# 创建三个子弹，每个间隔一定时间
+	for i in range(3):
+		# 延迟发射子弹
+		await get_tree().create_timer(i * triple_shot_interval).timeout
+		fire_single_bullet()
+	
 func _reload_scence() -> void:
 	get_tree().reload_current_scene()
 	
@@ -145,7 +172,20 @@ func Sel_init() -> void:
 	tracking_bullet_turn_speed_multiplier = 0.5  # 转向速度倍数
 	tracking_bullet_max_lifetime_bonus = 0.0  # 最大生存时间加成
 	$Timer.wait_time = 1  # 子弹发射间隔
+	if is_triple_shot_enabled:
+		# 如果三连发已启用，调整发射间隔
+		$Timer.wait_time *= 1.5
 
+func sel_triple_shot_apply() -> void:
+	# 启用三连发觉醒
+	is_triple_shot_enabled = true
+	$Timer.wait_time *= 1.5  # 增加发射间隔以适应三连发
+	print("三连发觉醒已启用！")
+
+func sel_moving_shooting_apply() -> void:
+	# 启用移动射击觉醒
+	is_moving_shooting = true
+	print("移动射击觉醒已启用！")
 
 # ultimate相关函数实现
 

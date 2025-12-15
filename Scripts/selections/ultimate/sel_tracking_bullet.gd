@@ -13,6 +13,7 @@ func _init():
 func initialize() -> void:
 	# 初始化牌包，可以在这里设置随机系数等
 	# turn_speed_coefficient = 1.1
+	is_enabled = false
 	description = "启用/强化追踪子弹"
 
 func apply_effect() -> void:
@@ -35,3 +36,7 @@ func on_before_apply() -> void:
 func on_after_apply() -> void:
 	# 应用后的效果，如播放特效等
 	pass
+
+func Close_Choose_time() -> void:
+	# 关闭选择界面时的处理（如果需要）
+	is_enabled = true

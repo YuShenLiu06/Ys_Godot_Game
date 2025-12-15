@@ -48,6 +48,7 @@ func _on_button_pressed() -> void:
 
 # 清理牌包
 func clear():
+	current_card.Close_Choose_time()
 	queue_free()
 
 # 设置牌包位置（用于布局）
@@ -91,4 +92,13 @@ func initialize_random_by_enable_tag() -> BaseCard:
 			initialize_card(card)
 		else:
 			push_error("无法创建任何牌包")
+	return card
+
+# 通过card_name初始化牌包
+func initialize_by_name(card_name: String) -> BaseCard:
+	var card = CardFactory.get_card_by_name(card_name)
+	if card:
+		initialize_card(card)
+	else:
+		push_error("无法通过名称 '" + card_name + "' 创建牌包")
 	return card
